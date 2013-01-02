@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: tutorial | Sam de Freyssinet]]></title>
+  <link href="http://def.reyssi.net/blog/categories/tutorial/atom.xml" rel="self"/>
+  <link href="http://def.reyssi.net/"/>
+  <updated>2013-01-01T22:40:11-06:00</updated>
+  <id>http://def.reyssi.net/</id>
+  <author>
+    <name><![CDATA[Sam de Freyssinet]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Compiling libzmq as a universal static library for iOS]]></title>
+    <link href="http://def.reyssi.net/blog/2013/01/01/compiling-libzmq-as-a-universal-static-library-for-iOS/"/>
+    <updated>2013-01-01T13:53:00-06:00</updated>
+    <id>http://def.reyssi.net/blog/2013/01/01/compiling-libzmq-as-a-universal-static-library-for-iOS</id>
+    <content type="html"><![CDATA[<p>I am currently playing around with the <a href="http://www.zeromq.org">ZeroMQ</a> messaging framework and iOS. This article describes the challenges encountered when integrating ZeroMQ with my iOS project and how I mitigated them. This resulted in a tool to automate producing a single libzmq static library for i386, armv7 and armv7s architectures.</p>
+
+<p>For the uninitiated, ZeroMQ provides a simple way to pass messages between processes, whether they are local or remote. It can use TCP, UDP, inproc, multicast and several protocols as the transport mechanism. In the past I have heard ZeroMQ (or <em>ØMQ</em> from now on) referred to as a "sockets framework". Although this doesn't capture the entirety of what ØMQ is, it does provide a nice metaphor for my particular use case.</p>
+
+<p>The project that required ØMQ in this instance was a proof of concept for another project I am currently engaged in. The application in question requires two iOS devices to communicate with each other in realtime across a network. ØMQ provides the communication layer, coupled with <a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/NetServices/Articles/about.html">Apple's Bonjour</a> zero config network discovery protocol. As ØMQ is a C based library, integrating it with an iOS project should require relatively little effort. Obtain the <a href="http://www.zeromq.org/area:download">libzmq source</a>, compile and add to the Xcode project. But as it turned out, producing a static library for iOS development took some additional effort.</p>
+
+<!--more-->
+
+
+<p>Because Apple provide an iOS simulator for development rather than a more useful iOS emulator, any static library must be compiled for the simulator and then again for iOS devices. When an iOS application runs in the simulator, it is using the <a href="http://en.wikipedia.org/wiki/X86">x86</a> (or i386) <a href="http://en.wikipedia.org/wiki/Instruction_set">instruction set</a>; iOS applications are not 64-bit, yet. However all iOS devices use an <a href="http://arm.com">ARM</a> based CPU of some description, requiring different instructions from their x86 cousins. Apple currently support two <a href="http://en.wikipedia.org/wiki/ARM_architecture">ARM architectures</a>, named armv7 for iPhone 4/4S plus the iPad 2 and 3. And armv7s for iPhone 5 and the new iPad 4 (retina display)<sup>[<a href="#f1">1</a>] [<a href="#f2">2</a>]</sup>. Due to this, my project requires ØMQ support for the i386, armv7 and armv7s architecture. It is possible to compile the ØMQ static library three times, add them all to the project and only link to the correct version at compile time. But this can be fiddly, especially when dealing with two almost identical architectures such as armv7 and armv7s.</p>
+
+<p>Fortunately Apple have encountered this multiple architecture problem in their recent past, when moving from the PowerPC to the current x86/x86_64 architecture. Apple wanted to ensure the transitional period was as smooth as possible for their users. So they created the concept of the universal binary, which they imaginatively named a "Universal Application". To the end user, they could execute the same application on their existing PowerPC powered iMac G5 or a shiny new Intel powered MacBook Pro without issue. However, this apparently magical execution of the same code on two different CPU architectures was nothing more than a cheap parlour trick. In reality a universal binary is a single resource that encapsulates the compiled code for two or more CPU architectures. Although the PowerPC to Intel transition was completed many years ago, the tools to produce these universal binaries remain. Only today iOS developers are combining x86 with ARM instructions.</p>
+
+<p>It is worthwhile to note that universal libraries are also referred to as "fat" libraries, because they are larger than their single architecture counterparts. The overall iOS application size is a factor in how they can be downloaded to the device. Applications weighing in at over 20 megabytes will require a wifi connection to be downloaded, and all applications must be less than two gigabytes. Although the two gigabyte ceiling is unlikely to be a problem due to a fat library, the 20 megabyte limit could cause a concern. If size is a factor for your application then it is probably worthwhile to only include the correct library for the target architecture. I'll touch on this briefly a bit later.</p>
+
+<p>The ØMQ page describing how to build <a href="http://www.zeromq.org/build:iphone">libzmq for iOS</a> details the <a href="http://en.wikipedia.org/wiki/Cross_compiler">cross-compiling</a> process. This is fine for creating an armv7 static library from an Intel powered Mac. But as discussed earlier, this library would not be usable by the iOS simulator. I require a universal static library for libzmq that can execute on all of the required architectures.</p>
+
+<p>The process of creating a universal static library for libzmq is conceptually straight forward, but as it turns out it is quite cumbersome. In theory, all that is required is to compile the libzmq library for i386, armv7 and armv7s and then glue them together into the universal binary. Compiling the binary for ARM requires cross-compiling using a version of <a href="http://gcc.gnu.org">GCC</a> with instructions for that CPU. All Mac systems with Xcode installed contain the ARM version of the compiler. The only challenge is figuring out the correct compile flags to set to ensure the right binary is produced.</p>
+
+<p>To save a lot of time I automated the process into a single bash script. I have placed this script on Github for anyone who requires it; available from <a href="https://github.com/samsoir/libzmq-ios-universal">https://github.com/samsoir/libzmq-ios-universal</a>. It is licensed under the open source <a href="http://opensource.org/licenses/ISC">ISC license</a>, so modifications and extensions are welcome. For those not willing to look at the <a href="https://github.com/samsoir/libzmq-ios-universal/blob/master/compile_libzmq_ios_universal">source</a>, the script performs the following operations.</p>
+
+<ol>
+<li>Compiles a libzmq static library for the armv7, armv7s and i386 architectures<sup>[<a href="#f3">3</a>]</sup>.</li>
+<li>A tool called <a href="https://developer.apple.com/documentation/Darwin/Reference/ManPages/man1/lipo.1.html">lipo</a> is used to perform the gluing of the three libraries into a single universal static library.</li>
+<li>The header files for the library are copied into the universal folder.</li>
+<li>Finally the script tidies up after itself and then provides instructions on what to do next.</li>
+</ol>
+
+
+<p>Once the script has finished executing successfully, there will be four versions of the libzmq library. One version for each architecture, and of course the universal version. The individual architecture versions of libzmq remain so that you can use them in place of the universal version if application size is an issue.</p>
+
+<p>The current project on Github is work in progress. It mostly supports my specific requirements at this time. If you try it and it does not work as designed for you, please do tell me or create a pull request. I do intend to add features and more support over time.</p>
+
+<h2>Tutorial</h2>
+
+<p>To use the <strong>libzmq-ios-universal</strong> compilation script, you will require a Mac with OS X Snow Lion with Xcode 4.3.3 or later installed. Additionally, <a href="http://www.gnu.org/software/automake/">Automake</a> is also required. I used <a href="http://mxcl.github.com/homebrew/">Homebrew</a> to obtain Automake in this tutorial, but you can also download and compile it yourself if you do not have, or want to have, Homebrew installed.</p>
+
+<p>First of all, if you have not done so already, install Automake using Homebrew. <em>Or build manually if preferred</em></p>
+
+<p>In a terminal type;</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>brew install automake</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>To verify whether automake is successfully installed;</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>automake --version</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>This should produce output similar to what is shown below. If automake is not found try reinstalling.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>automake (GNU automake) 1.12.3
+</span><span class='line'>Copyright (C) 2012 Free Software Foundation, Inc.
+</span><span class='line'>License GPLv2+: GNU GPL version 2 or later &lt;a href="http://gnu.org/licenses/gpl-2.0.html">http://gnu.org/licenses/gpl-2.0.html&lt;/a>
+</span><span class='line'>This is free software: you are free to change and redistribute it.
+</span><span class='line'>There is NO WARRANTY, to the extent permitted by law.&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>Written by Tom Tromey &lt;a href="&#x6d;&#x61;&#105;&#x6c;&#116;&#111;&#x3a;&#116;&#114;&#x6f;&#x6d;&#x65;&#x79;&#64;&#x72;&#x65;&#100;&#x68;&#97;&#x74;&#x2e;&#99;&#x6f;&#109;">&#116;&#114;&#x6f;&#x6d;&#101;&#121;&#x40;&#x72;&#101;&#x64;&#x68;&#97;&#116;&#46;&#99;&#111;&#x6d;&lt;/a>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>   and Alexandre Duret-Lutz &lt;adl@gnu.org&gt;.
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>With Automake installed and available, it is time to get the compilation script and the libzmq source code. Start by cloning the libzmq-ios-universal project from Github. Change directory to a suitable location</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>clone https://github.com/samsoir/libzmq-ios-universal.git</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Once the clone operation is completed, <code>cd libzmq-ios-universal</code> so that the next step downloads into the project folder.</p>
+
+<p>Now download and untar the latest stable build of libzmq from the <a href="http://www.zeromq.org/area:download">ZeroMQ download page</a>. At the time of writing this is version 3.2.2.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>wget http://download.zeromq.org/zeromq-3.2.2.tar.gz &amp;&amp; tar xfz zeromq-3.2.2.tar.gz</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>If everything is fine up until now, we are ready to begin compiling libzmq for iOS. To begin the process type;</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>./compile_libzmq_ios_universal</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>A successful compilation will result in the following output;</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Initializing build directory...
+</span><span class='line'>Initializing dependency directory...
+</span><span class='line'>Compiling libzmq for armv7...
+</span><span class='line'>Compiling libzmq for armv7s...
+</span><span class='line'>Compiling libzmq for i386...
+</span><span class='line'>Creating universal static library for armv7, armv7s and i386
+</span><span class='line'>Copying libzmq headers into universal library...
+</span><span class='line'>Tidying up...
+</span><span class='line'>Finished compiling libzmq as a static library for iOS.&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>Universal library can be found in build/universal;
+</span><span class='line'>  "lib" folder contains "libzmq.a" static library
+</span><span class='line'>  "include" folder contains headers&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>To use in your project follow linking instructions
+</span><span class='line'>available on the iOS zeromq page
+</span><span class='line'>http://www.zeromq.org/build:iphone</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Note that in the unfortunate event that something goes wrong during the compilation, the root cause may not be immediately apparent. However the last command executed places all of its output into a file called <code>build/build.log</code> relative to the current path. The cause of the issue should be apparent within that file.</p>
+
+<p>Assuming everything is fine, it is now possible to add the new universal static library to Xcode.</p>
+
+<p>Change the directory to your Xcode project, for example;</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd ~/Projects/&lt;project name></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>I like to keep my external libraries in their own directory. So I create a directory called "lib" within the project to keep them in.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mkdir -p &lt;project name>/lib &amp;&amp; open &lt;project name>
+</span><span class='line'>cp /&lt;path>/&lt;to>/&lt;libzmq>/build/universal &lt;project name>/lib/libzmq</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>This will result in a new directory named <code>lib</code> created within the <code>MyZMQProject</code> code base directory. Within that folder with be a <code>libzmq</code> folder containing the static library and headers. Xcode will nest the directories like this to keep separate targets apart within a project. Finally the command will open a Finder window at <code>./MyZMQProject</code> allowing you to see the <code>lib</code> folder.</p>
+
+<p><img src="/images/libzmq/lib.png" title="Finder showing lib folder" ></p>
+
+<p>Ensure your Xcode project is open within Xcode and then drag the <code>lib</code> folder from Finder into the correct (and corresponding location) within Xcode. A dialog will appear asking how you want to add the folder to the project.</p>
+
+<p><img src="/images/libzmq/xcode_add_to_project.png" title="Xcode add folder to project" ></p>
+
+<p>Once you select "Finish" the <code>lib</code> folder will be added to your project.</p>
+
+<p>Before you can start using the library you need to update your projects settings to link the library to your project at compile time, and include the headers in the search path.</p>
+
+<p>Within the main target of your project, filter the <em>Build Settings</em> to only show items including "Search Path". Then update <em>Header Search Paths</em> section to include your newly created <code>lib</code> folder. Add <code>${SRCROOT}/&lt;project name&gt;/lib/**</code> to the list and hit return. The double-star means search recursively through sub folders.</p>
+
+<p><img src="/images/libzmq/header_search_paths.png" title="Header search paths in project settings" ></p>
+
+<p>Xcode 4.5 automatically adds the correct path for libzmq to the <em>Library Search Paths</em> entry. However if this hasn't been added for you, the same entry that was added for <em>Header Search Paths</em> will work here.</p>
+
+<p>At this point you are ready to start using libzmq in your code. To use the ØMQ C library within your code, import the <code>zmq.h</code> header in any location where you require it. Libzmq will now run  in the simulator or on a device without modification.</p>
+
+<h2>Footnotes</h2>
+
+<p><strong id="f1">1.</strong> As the name implies, armv7 instructions can be executed on armv7s architectures, but the reverse is not true. The armv7s architecture provides additional instructions that provide faster execution of code over armv7, so it is worth supporting it when possible.</p>
+
+<p><strong id="f2">2.</strong> Anyone that is put off by this, it is worth mentioning that there is an <a href="https://github.com/jeremy-w/objc-zmq">Objective C</a> higher level wrapper in existence.</p>
+
+<p><strong id="f3">3.</strong> I decided not to support armv6 at this point. It may be added in in future if demand shows it is worthwhile. Or there is a pull request.</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: blogging | Sam de Freyssinet]]></title>
+  <link href="http://def.reyssi.net/blog/categories/blogging/atom.xml" rel="self"/>
+  <link href="http://def.reyssi.net/"/>
+  <updated>2013-01-01T22:40:11-06:00</updated>
+  <id>http://def.reyssi.net/</id>
+  <author>
+    <name><![CDATA[Sam de Freyssinet]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Get blogging with Octopress on Heroku]]></title>
+    <link href="http://def.reyssi.net/blog/2012/01/14/get-blogging-with-octopress-on-heroku/"/>
+    <updated>2012-01-14T20:01:00-06:00</updated>
+    <id>http://def.reyssi.net/blog/2012/01/14/get-blogging-with-octopress-on-heroku</id>
+    <content type="html"><![CDATA[<p>Following on from <a href="/blog/2012/01/14/hello-2012/">my opening post</a>, one of the main hurdles preventing me from blogging was the setup of a blogging platform and the management of the hosting. Thankfully, <a href="http://octopress.org">Octopress</a> and <a href="http://heroku.com">Heroku</a> have provided a simple, effective and free way for me to publish my thoughts to the web. In this post I will explain how I got started with Octopress on Heroku.</p>
+
+<!-- More -->
+
+
+<h2>Setting up your development environment</h2>
+
+<p>First off you are going to require <strong>Ruby 1.9.2</strong>. At this point your natural temptation may be to <a href="http://www.ruby-lang.org/en/downloads/">download and compile the source code</a> directly. This will work for the most part, but any seasoned Ruby developer will advice you against this path.</p>
+
+<p>When doing any serious Ruby development you most likely will be working on numerous projects that use a variety of different frameworks, each with their own specific Ruby and <a href="http://rubygems.org/">Gem</a> version requirements. Managing multiple versions of Ruby and Gems manually is a rather daunting task.</p>
+
+<p>Thankfully this problem has been solved already by <a href="http://beginrescueend.com/rvm/install/">RVM</a> and <a href="https://github.com/sstephenson/rbenv">Rbenv</a>. Both RVM and Rbenv provide an isolated Ruby environment, encapsulating Ruby and Gems to specific versions. This allows each Ruby project on your system to run a targeted version of Ruby and Gems per project without concerning yourself with conflicts. I am not going to advocate either of these tools over each other, but I will be using RVM in this article. There are instructions on using Rbenv on the Octopress <a href="http://octopress.org/docs/setup/">setup guide</a>.</p>
+
+<p>To install <strong>RVM</strong>, in Terminal run;</p>
+
+<p><code>
+$ bash &lt; &lt;(curl -s https://rvm.beginrescueend.com/install/rvm)
+</code></p>
+
+<p>Once <strong>RVM</strong> has finished installing, you should add it to your shell as a command. Run the following command to update your <code>.bash_profile</code>.</p>
+
+<p><code>
+$ echo '[[ -s "$HOME/.rvm/scripts/rvm" ]] &amp;&amp; . "$HOME/.rvm/scripts/rvm" # Load RVM function' &gt;&gt; ~/.bash_profile
+</code></p>
+
+<p>Finally you should update your Terminal sessions <code>.bash_profile</code> to load the new profile settings.</p>
+
+<p><code>
+$ source ~/.bash_profile
+</code></p>
+
+<p>Now you're ready to install Ruby 1.9.2.</p>
+
+<p><code>
+$ rvm install 1.9.2 &amp;&amp; rvm use 1.9.2
+</code></p>
+
+<p>This command installs Ruby 1.9.2 as a Gem into your <code>~/.rvm/gems/</code> folder. Now within each Ruby application, you can create a <code>.rvmrc</code> file that defines the Gem sets required by the project. For example, Octopress instructs <em>RVM</em> to use Ruby 1.9.2 by including the following in its <code>.rvmrc</code> file.</p>
+
+<p><code>
+rvm use 1.9.2
+</code></p>
+
+<h2>Obtaining Octopress</h2>
+
+<p>The best way of getting Octopress is directly from <a href="http://github.com//imathis/octopress">Github</a>. This will require your system to have <a href="http://git-scm.com">Git</a> installed. By cloning the Octopress project, obtaining updates in the future will be as easy as <code>git pull origin master</code>. However you may prefer to fork the project on Github and then clone from your own repository. In this case, I am happy with the standard build of Octopress, so will clone it directly.</p>
+
+<p><code>
+$ git clone http://github.com/imathis/octopress.git ~/Projects/octopress
+</code></p>
+
+<p>This will place an instance of Octopress into my <code>~/Projects/octopress</code> folder. You may wish to place it elsewhere, it does not matter where at this time.</p>
+
+<p>Now change directory into the newly created local Git repository and check the Ruby version.</p>
+
+<p><code>
+$ cd ~/Projects/octopress
+$ ruby --version
+ruby 1.9.2p290 (2011-07-09 revision 32553) [x86_64-darwin11.2.0]
+</code></p>
+
+<p>You should see the Ruby version you previously installed, the exact version number and details will differ depending on your platform and other environment variables. The Ruby environment is controlled by the RVM  <code>~/Projects/octopress/.rvmrc</code> file I mentioned earlier.</p>
+
+<p>Next we install <a href="http://gembundler.com/">Bundler</a> into this project.</p>
+
+<p><code>
+$ gem install bundler
+$ bundler install
+</code></p>
+
+<p>Taken from its own website, Bundler provides the following functionality;</p>
+
+<p><blockquote><p>Bundler manages an application's dependencies through its entire life across many machines systematically and repeatably.</p></blockquote></p>
+
+<p>When the <code>bundler install</code> command is invoked, it reads the required list of Gems from the projects <code>Gemfile</code>. If you were inspect the <code>Gemfile</code> for Octopress, you can see the project dependencies.</p>
+
+<p>Finally, to install the default Octopress theme run the following command.</p>
+
+<p><code>
+$ rake install
+</code></p>
+
+<p>This will setup your local instance of Octopress with the standard theme. In my instance this command failed with the following message.</p>
+
+<p>```
+$ rake install
+rake aborted!
+You have already activated rake 0.9.2.2, but your Gemfile requires rake 0.9.2. Using bundle exec may solve this.</p>
+
+<p>(See full trace by running task with --trace)
+```</p>
+
+<p>In some circumstances this will happen if you have a newer version of rake installed for whatever reason. Usually the Gemfile and Bundler will resolve these issues, but because both <code>rake 0.9.2</code> and <code>rake 0.9.2.2</code> are matched in the Gemfile this conflict is not resolved. However in this case, following prescribed advice provides the expected outcome.</p>
+
+<p>```
+$ bundle exec rake install</p>
+
+<h2>Copying classic theme into ./source and ./sass</h2>
+
+<p>```</p>
+
+<p>Octopress is now installed locally and is ready for you to begin blogging. You can use a plethora of hosting services with Octopress. As Octopress compiles a static version of your site, it would be perfectly possible just to publish the <code>public/</code> folder to any standard HTTP server such as Apache or Nginx.</p>
+
+<p>Because the contents of <code>public/</code> folder is compiled by Octopress, by default the Git clone of the project will contain a <code>.gitignore</code> file with an entry to ignore the <code>public</code> folder. We need to remove this entry to ensure the <code>public/</code> folders contents are included in our git repository and pushed upstream.</p>
+
+<p>To remove the entry, edit the <code>.gitignore</code> file remove the offending line.</p>
+
+<h2>Deployment to Heroku</h2>
+
+<p><img src="http://f.cl.ly/items/0A0C3C1V173U2j0q213S/Image%202012.01.14%2021:22:21.png" title="Heroku Homepage" ></p>
+
+<p>Deployment to Heroku requires an account on Heroku. If you do not have an existing Heroku account, <a href="https://api.heroku.com/signup">sign up</a> for one now.</p>
+
+<p>I am discovering that as with most things in Ruby, there is usually a Ruby Gem tailored to working with whatever Ruby service you require. Heroku is no different.</p>
+
+<p>To install the Heroku Gem.</p>
+
+<p><code>
+$ gem install heroku
+</code></p>
+
+<p>Now we have the Heroku Gem available, we can create our Heroku app. This does require an existing Heroku account, so if you still have not signed up with the Heroku service, now really is the time!</p>
+
+<p><strong>Note:</strong> To proceed you will need to have a SSH public key. Github have a <a href="http://help.github.com/set-up-git-redirect/">great guide</a> if you require help.</p>
+
+<p>First we need to tell Heroku about our account. Using the <code>heroku login</code> command, we can authenticate ourselves with the Heroku service.</p>
+
+<p><code>
+$ heroku login
+Enter your Heroku credentials.
+Email: &lt;your email address&gt;
+Password: &lt;your password&gt;
+Found existing public key: /Users/&lt;your user&gt;/.ssh/id_rsa.pub
+Uploading ssh public key /Users/&lt;your user&gt;/.ssh/id_rsa.pub
+</code></p>
+
+<p>If successful, the <code>heroku login</code> command will upload our SSH public key automatically to the Heroku service. The reason for this is that you publish to Heroku using Git, and just like any other standard Git remote repository, connection is made over SSH.</p>
+
+<p>Next we create an application on Heroku that will host this blog.</p>
+
+<p><code>
+$ heroku create
+Creating smooth-beach-2208... done, stack is bamboo-mri-1.9.2
+http://smooth-beach-2208.heroku.com/ | git@heroku.com:smooth-beach-2208.git
+</code></p>
+
+<p>Well we have an app, but I don't like the name. Heroku will generate a random name for applications if no name is supplied. After doing some research, I discovered you can provide a name, thus <code>heroku create defreyssinet</code> would result in an application located at <code>defreyssinet.heroku.com</code>. However it is not a disaster as we can rename any Heroku application after creating it.</p>
+
+<p>To rename our app, within the <code>~/Projects/octopress</code> folder type.</p>
+
+<p><code>
+$ heroku rename defreyssinet
+http://defreyssinet.heroku.com/ | git@heroku.com:defreyssinet.git
+Git remote heroku updated
+</code></p>
+
+<p>This has updated the hostname on Heroku and rather neatly tidied up our local Git repository remote entries. It is possible to do this manually by logging on to the Heroku site and renaming the app there, then updating the local git repository remote entries.</p>
+
+<p><code>
+$ git rm heroku
+$ git remote add heroku git@heroku.com:defreyssinet.git
+</code></p>
+
+<p>At this point we have a Heroku app linked to our local Octopress Git repository. We can verify that our app has indeed been created by logging onto Heroku and selecting the <em>My Apps</em> menu item.</p>
+
+<p><img src="http://f.cl.ly/items/3c1p3l021j2w0V011Y1I/Image%202012.01.14%2022:52:15.png" title="Heroku Applications" ></p>
+
+<p>Now we have a local instance of Octopress and a host ready to accept our new blog. What is lacking is the content.</p>
+
+<h2>Creating a new post</h2>
+
+<p>As I mentioned earlier, Octopress is a static site generator rather than a fully fledged web application like <em>Wordpress</em> or <em>Habari</em>. This implies that there is a specific workflow in relation to publishing using Octopress. The typical publication flow for an article is as follows;</p>
+
+<ol>
+<li>Create an article - <code>rake new_post["title"]</code></li>
+<li>Write some content</li>
+<li>Review - <code>rake generate</code></li>
+<li><em>If more work required, return to step 2.</em></li>
+<li>Publish - <code>git push heroku &lt;your app&gt;</code></li>
+</ol>
+
+
+<p>Before we get ahead of ourselves, it is time to setup the configuration of the blog using the <code>_config.yaml</code> file found in the root of the project. All of the configuration settings are described in detail on the <a href="http://octopress.org/docs/configuring/">Configuring Octopress</a> page. Before creating any content it is probably worth familiarizing and editing this file to your specific needs.</p>
+
+<p>Creating an article simply uses the <code>rake new_post["title"]</code> task. This creates a new file in the <code>~/Projects/octopress/source/_posts/</code> folder with a name composed of the date and the title. The extension will be <code>.markdown</code> as we will be writing in <a href="http://daringfireball.net/projects/markdown/">Markdown</a> format.</p>
+
+<p><strong>Note:</strong> We will only be working in the <code>source/</code> folder and we <em>must</em> not touch the <code>public/</code> folder. The <code>rake generate</code> task compiles the contents of <code>source/</code> and places it into <code>public/</code>.</p>
+
+<p>So lets go ahead and create an article. (<em>I'm prefixing with <code>bundle exec</code> here to avoid the version complaint seen earlier.</em>)</p>
+
+<p><code>
+bundle exec rake new_post["Get blogging with Octopress on Heroku"]
+</code></p>
+
+<p>Rake helpfully creates a new Markdown file called <code>2012-01-14-get-blogging-with-octopress-on-heroku</code> in the <code>source/_posts</code> folder. Opening up the new file will reveal the following.</p>
+
+<h2><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>source/_posts/2012-01-14-get-blogging-with-octopress-on-heroku</span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/h2>
+</span><span class='line'>
+</span><span class='line'>&lt;p>layout: post
+</span><span class='line'>title: "Get blogging with Octopress on Heroku"
+</span><span class='line'>date: 2012-01-14 12:24:32
+</span><span class='line'>comments: true&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;h2>categories:&lt;/h2>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>The header of this file contains some <a href="https://github.com/mojombo/jekyll/wiki/yaml-front-matter">yaml front matter</a>. There are additional options available to control the publication state and author. <del>Personally I think the time of publication is less important, but this is easily fixed by removing the time index from the <code>date:</code> entry</del> (<strong>Edit:</strong> don't do this as it will mess up article ordering!). I have also turned off comments <code>comments: false</code> for this post.</p>
+
+<p>It is now possible to add some content to this page in Markdown format. We don't need a title as the filename will become the title, so don't start with a <code># my  title</code> block.</p>
+
+<h2><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>source/_posts/2012-01-14-get-blogging-with-octopress-on-heroku</span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/h2>
+</span><span class='line'>
+</span><span class='line'>&lt;p>layout: post
+</span><span class='line'>title: "Get blogging with Octopress on Heroku"
+</span><span class='line'>date: 2012-01-14
+</span><span class='line'>comments: false&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;h2>categories: [blogging, heroku]&lt;/h2>
+</span><span class='line'>
+</span><span class='line'>&lt;p>Following on from &lt;a href="http://def.reyssi.net/blog/2012/01/14/hello-2012/">my opening post&lt;/a>, one of the main hurdles preventing me from blogging was the setup of the blog platform and the management of the hosting. Thankfully, &lt;a href="http://octopress.org">Octopress&lt;/a> and &lt;a href="http://heroku.com">Heroku&lt;/a> have provided a simple, effective and free way for me to publish my thoughts to the web. In this post I will explain how I got started with Octopress on Heroku.&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>...</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>With some content in place, we can generate our first blog post using the <code>rake generate</code> task.</p>
+
+<p>```
+$ bundle exec rake generate</p>
+
+<h2>Generating Site with Jekyll</h2>
+
+<p>unchanged sass/screen.scss
+Configuration from /Users/sdefreyssinet/Projects/octopress/_config.yml
+Building site: source -> public
+Successfully generated site: source -> public
+```</p>
+
+<p>At this point Octopress has compiled the static version of our site. It is possible to load the <code>public/index.html</code> folder into any browser to view our new content.</p>
+
+<p>If like me you are using Mac OS X, you can use the <a href="http://pow.cx/">POW</a> zero-configuration rack server from <a href="http://37signals.com/">37signals</a> to host your site locally.</p>
+
+<p>With POW installed, the following commands will create a local web server hosting our Octopress site.</p>
+
+<p><code>
+$ cd ~/.pow
+$ ln -s ~/Projects/octopress octopress
+</code></p>
+
+<p>Now it is simply a case of navigating to <a href="http://octopress.dev">http://octopress.dev</a> to see the site we just compiled. This is a really quick and simple way of reviewing changes.</p>
+
+<p><em>Users on other platforms that wish to test in a server environment locally just need to host their local <code>public/</code> folder.</em></p>
+
+<p>Previewing the site should present a page that looks similar to the screenshot below.</p>
+
+<p><img src="http://f.cl.ly/items/0a392t0q132I340W2s2Z/Image%202012.01.15%2000:43:09.png" title="'Our first post hosted by POW'" ></p>
+
+<p>Looking good. At this point we can carry on editing and reviewing until we're happy the post is ready. Remember that each time a change is made, an additional <code>rake generate</code> task needs to be invoked before any changes will be available in the <code>public/</code> folder.</p>
+
+<h2>Publishing to Heroku</h2>
+
+<p>The first post is completed, reviewed and ready for publication. This is where Heroku makes our lives very easy. First we need to check all of our changes into the local Git repository.</p>
+
+<p><code>
+$ git add .
+$ git commit -am 'Initial commit with our first post, get blogging with octopress on heroku'
+</code></p>
+
+<p>With the local repository up to date, we can push the repository to Heroku. Once the repository is pushed to Heroku it will be available <em>immediately</em>, so be sure you're <em>really</em> ready to publish before pushing upstream.</p>
+
+<p>```
+$ git push heroku master
+Counting objects: 77, done.
+Delta compression using up to 8 threads.
+Compressing objects: 100% (39/39), done.
+Writing objects: 100% (49/49), 4.80 KiB, done.
+Total 49 (delta 26), reused 0 (delta 0)</p>
+
+<p>-----> Heroku receiving push
+-----> Ruby/Sinatra app detected
+-----> Gemfile detected, running Bundler version 1.0.7</p>
+
+<pre><code>   All dependencies are satisfied
+</code></pre>
+
+<p>-----> Compiled slug size is 784K
+-----> Launching... done, v8</p>
+
+<pre><code>   http://def.reyssi.net deployed to Heroku
+</code></pre>
+
+<p>To git@heroku.com:defreyssinet.git
+   efce197..2f3ed54  master -> master
+```</p>
+
+<p>Once the repository is pushed upstream, it will be available from the address configured in the Heroku app. In this case we named the app <code>defreyssinet</code> so the site will be available from <a href="http://defreyssinet.heroku.com">http://defreyssinet.heroku.com</a>.</p>
+
+<h2>In conclusion</h2>
+
+<p>In this blog post we have covered how to create a blog using the Octopress static site generator and host it on Heroku. In particular we have covered provisioning a local development environment with POW, obtaining Ruby using RVM and cloning the Octopress project from Github. We created a new Heroku application instance using the Heroku cli interface. Then we discovered how the publishing cycle works with Octopress, revolving around the <code>rake generate</code> task. Finally we pushed the Octopress blog to Heroku for production.</p>
+
+<p>This article only scratches the surface of what Octopress offers, for more information I encourage everyone to read the official  <a href="http://octopress.org/docs">documentation</a>.</p>
+
+<p>Octopress will certainly not be to everyones tastes, but I hope this article has provided those with the slightest curiosity about Octopress some impetus to try it from themselves.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Hello 2012]]></title>
+    <link href="http://def.reyssi.net/blog/2012/01/14/hello-2012/"/>
+    <updated>2012-01-14T12:31:00-06:00</updated>
+    <id>http://def.reyssi.net/blog/2012/01/14/hello-2012</id>
+    <content type="html"><![CDATA[<p>As is so common at this time of year, I have made a new years resolution to restart blogging. I have attempted to blog in the past, twice in actuality. However both excursions failed to hold in the longterm due to a number of factors, most regularly <em>real life syndrome</em>. Of course I have not been totally silent in this time, writing for the popular PHP blog <a href="http://techportal.ibuildings.com">TechPortal</a> on the subject of HMVC <a href="http://techportal.ibuildings.com/2010/02/22/scaling-web-applications-with-hmvc/">Scalability</a> and <a href="http://techportal.ibuildings.com/2010/11/16/optimising-hmvc-web-applications-for-performance/">Optimization</a>.</p>
+
+<p><em>So why start writing again now?</em> Well there are a number of reasons, too many to list here in full without leaving you bored. But three are worth mentioning;</p>
+
+<!-- More -->
+
+
+<ol>
+<li><p>For some time I have wanted to create a new blog, but none of the existing popular blogging platforms attracted me. <em>Wordpress</em> is, in this authors opinion, an awfully architected application that has unfortunately become popular the world over. I also considered writing my own system, but given I hardly had time to write article developing my own platform would be too big an ask- I did have a <a href="https://github.com/samsoir/def.reyssi.net-legacy">stab at it</a> though! I had thoughts on developing a very rudimentary platform that would take my notes in Markdown format and publish them to either my server or another cloud-based server. Then I read a <a href="http://mattgemmell.com/2011/09/12/blogging-with-octopress/">blog post</a> by Matt Gemmell on <a href="http://octopress.org">Octopress</a> and realized it had already been done well.</p></li>
+<li><p>I have started a new job in Chicago. This in itself is nothing special. However my new role involves using a new programming language in the form of <a href="http://ruby-lang.org">Ruby</a>. For over ten years I have been developing for the web using <a href="http://php.net">PHP</a> and related tools. So the move from LAMP to Nginx+Unicorn and; PHPUnit+Behat to Rspec+Cucumber will be a great opportunity for me to record my experience changing languages and toolsets. In all honesty I am delighted to be moving away from PHP, but that is a topic I'll be writing about separately. On top of the challenges associated with mastering new language,I have also moved into a strange new country, which presents another aspect of my life to write about. Chronicling the trials and tribulations of moving country for work may be useful to others, if not a reminder to myself that international moving is not for the faint hearted!</p></li>
+<li><p>Since my previous blogs disappeared, Twitter and Google+ have provided me with some online expression capabilities. But they do not provide me with enough characters to express myself in any kind of meaningful way, especially when writing about complicated subjects such as the OAuth Protocol; Continuous Deployment pipelines; or the Hierarchical Model-View-Controller architectural pattern. I really needed the freedom to construct articles as I have been used to writing for other publishers. Thus, restarting a blog seemed the only appropriate action.</p></li>
+</ol>
+
+
+<p>I am turning off any ability to comment from the outset. The reasons for doing so has already been <a href="http://mattgemmell.com/2011/11/29/comments-off/">argued most eloquently</a> by the aforementioned Matt Gemmell on his blog, so no need repeat that here. Needless to say, feel free to comment on anything I say on your own blog, Twitter, Facebook, Google+, or by email.</p>
+
+<p>Lets see what 2012 has to offer.</p>
+]]></content>
+  </entry>
+  
+</feed>

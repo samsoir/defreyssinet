@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: testing | Sam de Freyssinet]]></title>
+  <link href="http://def.reyssi.net/blog/categories/testing/atom.xml" rel="self"/>
+  <link href="http://def.reyssi.net/"/>
+  <updated>2013-01-01T22:40:11-06:00</updated>
+  <id>http://def.reyssi.net/</id>
+  <author>
+    <name><![CDATA[Sam de Freyssinet]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Adding OCMock to Xcode 4 projects]]></title>
+    <link href="http://def.reyssi.net/blog/2012/03/23/using-ocmock-with-xcode4/"/>
+    <updated>2012-03-23T18:20:00-05:00</updated>
+    <id>http://def.reyssi.net/blog/2012/03/23/using-ocmock-with-xcode4</id>
+    <content type="html"><![CDATA[<p>Today I have been adding some new functionality to an iPhone application I am currently developing for <a href="http://www.sittercity.com">work</a>. Being the good developer that I am (<em>Ed</em>: and modest too), I started by writing some tests to cover the changes I needed to make. These days Xcode ships with the <a href="http://www.sente.ch/software/ocunit/">SenTest</a> Objective C unit testing framework, which is great. But SenTest does not include a mocking framework. Fortunately <a href="http://ocmock.org/">OCMock</a> exists to solve this very problem. However getting it into your iOS project and running takes a little bit of effort.</p>
+
+<!-- more -->
+
+
+<p>First of all grab the latest copy of the OCMock dmg from <a href="http://ocmock.org#download">http://ocmock.org#download</a>, <em>version 2.0.1</em> at the time of writing.
+Next mount the disk image <code>ocmock-2.0.1.dmg</code> (version number may be different) so that
+the directory structure of the mounted disk image should resemble the image below
+   <img src="/images/OCMock.png" title="[OCMock directory structure]" ></p>
+
+<p>At this point the OCMock library is ready to be added to your project. The disk image provided supplies linked libraries for iOS and Mac OS X, as well as the source. Naturally the project source is also available on <a href="http://github.com/erikdoe/ocmock">Github</a>. Be warned, the Github source will require compiling before it can be used in your own tests. If you are not comfortable with that concept, it is best just to use the precompiled binaries.</p>
+
+<p>Before importing the OCMock library into your Xcode 4 project, create a folder for this library name something similar to <code>$(SRCROOT)/tests/libraries</code>. <code>$(SRCROOT)</code> is xcode shorthand for the project root folder for anyone scratching their head. In Xcode create a group within the <code>tests</code> group called <code>libraries</code> to mirror the layout of the filesystem. Now drag the contents of the OCMock <em>iOS</em> folder on the mounted drive to the new <code>libraries</code> group within Xcode created previously.</p>
+
+<p>Xcode <em>might</em> be clever and realize what has just happened at this point and added <code>libOCMock.a</code> to your tests targets <em>Link Binary With Libraries</em> build phase. If it has not, then you can drag <code>libOCMock.a</code> from your filetree into the <em>Link Binary With Libraries</em> build phase to add it. Before continuing we need to ensure that Xcode is including the library and headers when the tests are run. Within the test target, check the <em>Build Settings</em> entry for <em>Header Search Paths</em> and <em>Library Search Paths</em> includes <code>$(SRCROOT)/tests/libraries</code>.</p>
+
+<p>Finally and most <strong>importantly</strong> Xcode needs to tell the compiler to force load the OCMock libraries at compile time, otherwise your tests will crash. Within the <em>Build Settings</em> in your test build target add the following line to the <em>Other Linker Flags</em> entry; <code>-force_load $(SRCROOT)/tests/libraries/libOCMock.a</code>.</p>
+
+<p>OCMock is now ready for use and bar any other unforseen problems, testing should be uneventful. The last step of instructing the compilier to force load the library caused me to loose 30 minutes this afternoon, so hopefully this will help anyone else having similar issues.</p>
+]]></content>
+  </entry>
+  
+</feed>

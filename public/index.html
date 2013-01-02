@@ -1,0 +1,528 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Sam de Freyssinet</title>
+  <meta name="author" content="Sam de Freyssinet">
+
+  
+  <meta name="description" content="I am currently playing around with the ZeroMQ messaging framework and iOS. This article describes the challenges encountered when integrating ZeroMQ &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://def.reyssi.net/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/defreyssinet" rel="alternate" title="Sam de Freyssinet" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-28327797-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Sam de Freyssinet</a></h1>
+  
+    <h2>An archive of thoughts and discoveries in the world of software development</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/defreyssinet" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:def.reyssi.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/about">About</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/01/compiling-libzmq-as-a-universal-static-library-for-iOS/">Compiling Libzmq as a Universal Static Library for iOS</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-01T13:53:00-06:00" pubdate data-updated="true">Jan 1<span>st</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I am currently playing around with the <a href="http://www.zeromq.org">ZeroMQ</a> messaging framework and iOS. This article describes the challenges encountered when integrating ZeroMQ with my iOS project and how I mitigated them. This resulted in a tool to automate producing a single libzmq static library for i386, armv7 and armv7s architectures.</p>
+
+<p>For the uninitiated, ZeroMQ provides a simple way to pass messages between processes, whether they are local or remote. It can use TCP, UDP, inproc, multicast and several protocols as the transport mechanism. In the past I have heard ZeroMQ (or <em>ØMQ</em> from now on) referred to as a &#8220;sockets framework&#8221;. Although this doesn&#8217;t capture the entirety of what ØMQ is, it does provide a nice metaphor for my particular use case.</p>
+
+<p>The project that required ØMQ in this instance was a proof of concept for another project I am currently engaged in. The application in question requires two iOS devices to communicate with each other in realtime across a network. ØMQ provides the communication layer, coupled with <a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/NetServices/Articles/about.html">Apple&#8217;s Bonjour</a> zero config network discovery protocol. As ØMQ is a C based library, integrating it with an iOS project should require relatively little effort. Obtain the <a href="http://www.zeromq.org/area:download">libzmq source</a>, compile and add to the Xcode project. But as it turned out, producing a static library for iOS development took some additional effort.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/01/01/compiling-libzmq-as-a-universal-static-library-for-iOS/">Read article in full &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/08/windycitygo-mobile-conference-day-1/">WindyCityGo Mobile Conference Day 1</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-08T15:46:00-05:00" pubdate data-updated="true">Apr 8<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://windycitygo.org/theme/4d63eb23dabe9d771e0001cb/stylesheets/images/windycitygo-tagline.png" title="WindyCityGo logo" ></p>
+
+<p>This week I attended the <a href="http://windycitygo.org/">WindyCityGo, Chicago&#8217;s mobile developers conference</a>. WindyCityGo is in its second year and like musicians second album, it was potentially a tricky one. Chicago&#8217;s tech scene is currently enjoying massive growth, no doubt helped by the success of locally based popular internet brands Threadless, 37signals, Orbitz, Career Builder and not forgetting Groupon. Recently many local startup companies have also been making a big name for themselves as well such as Peapod, GrubHub, Braintree and my employer Sittercity. With this in mind I expected a massive turnout for the WindyCityGo conference, so I was rather surprised to discover that this conference was a very intimate affair.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/04/08/windycitygo-mobile-conference-day-1/">Read article in full &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/31/refactored-phonegap-ios-datepicker/">Refactoring the PhoneGap iOS DatePicker</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-31T10:00:00-05:00" pubdate data-updated="true">Mar 31<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="/images/datepicker.png" alt="iOS Date Picker" /></p>
+
+<p>Recently my team were using <a href="http://phonegap.com/"><em>PhoneGap</em></a>, the HTML5 middleware that enables web developers to write mobile apps once using technologies they know; HTML5, CSS and Javascript. The completed PhoneGap/HTML5 application is then compiled into binaries for each of the <a href="http://phonegap.com/about/features">supported mobile platforms</a>. The idea is simple, developers write code once and deploy many times. PhoneGap can certainly be used for creating simple applications, but stray from the <a href="http://docs.phonegap.com/en/1.4.1/index.html">core API</a> and you quickly find yourself either writing a native extension; or more likely finding a plugin that does the task for you.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/31/refactored-phonegap-ios-datepicker/">Read article in full &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/26/dns-woes/">DNS Woes</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-26T22:11:00-05:00" pubdate data-updated="true">Mar 26<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://assets.diylol.com/hfs/2b6/858/748/resized/x-all-the-things-meme-generator-kill-all-the-servers-1abf33.jpg" title="Kill all the servers" ></p>
+
+<p>Just a quick note to say that I have been experiencing some DNS woes with this domain. As a result, many of you have probably been seeing a far from beautiful <code>404 Not Found</code> served by my former hosting company. Initially I thought this was an issue with my <a href="http://heroku.com">Heroku</a> web dynos. However after doing some further DNS analysis and investigation I discovered that I had what can only be described as <em>DNS EpicFAIL</em>!</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/26/dns-woes/">Read article in full &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/23/using-ocmock-with-xcode4/">Adding OCMock to Xcode 4 Projects</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-23T18:20:00-05:00" pubdate data-updated="true">Mar 23<span>rd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Today I have been adding some new functionality to an iPhone application I am currently developing for <a href="http://www.sittercity.com">work</a>. Being the good developer that I am (<em>Ed</em>: and modest too), I started by writing some tests to cover the changes I needed to make. These days Xcode ships with the <a href="http://www.sente.ch/software/ocunit/">SenTest</a> Objective C unit testing framework, which is great. But SenTest does not include a mocking framework. Fortunately <a href="http://ocmock.org/">OCMock</a> exists to solve this very problem. However getting it into your iOS project and running takes a little bit of effort.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/23/using-ocmock-with-xcode4/">Read article in full &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/02/29/dutch-mobile-conference-2012/">Dutch Mobile Conference 2012</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-29T20:56:00-06:00" pubdate data-updated="true">Feb 29<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://mobileconference.nl"><img src="/images/dmc_wide_speaker.png" alt="Dutch Mobile Conference" /></a></p>
+
+<p>I am delighted to announce that I&#8217;ll be speaking at the <a href="http://mobileconference.nl">Dutch Mobile Conference</a> in June 2012. I will be presenting <em>Ten considerations for taking a web business to the mobile market</em> on the Friday. The talk will provide attendees with ten useful considerations for taking an existing online business into treacherous world of mobile. Moving an established online business into the mobile domain sounds simple to say. In some cases, it can be simple to perform. But the reality for a lot of companies is that their present model does not necessarily work within a mobile context.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/02/29/dutch-mobile-conference-2012/">Read article in full &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/14/get-blogging-with-octopress-on-heroku/">Get Blogging With Octopress on Heroku</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-14T20:01:00-06:00" pubdate data-updated="true">Jan 14<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Following on from <a href="http://def.reyssi.net/blog/2012/01/14/hello-2012/">my opening post</a>, one of the main hurdles preventing me from blogging was the setup of a blogging platform and the management of the hosting. Thankfully, <a href="http://octopress.org">Octopress</a> and <a href="http://heroku.com">Heroku</a> have provided a simple, effective and free way for me to publish my thoughts to the web. In this post I will explain how I got started with Octopress on Heroku.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/01/14/get-blogging-with-octopress-on-heroku/">Read article in full &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/14/hello-2012/">Hello 2012</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-14T12:31:00-06:00" pubdate data-updated="true">Jan 14<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>As is so common at this time of year, I have made a new years resolution to restart blogging. I have attempted to blog in the past, twice in actuality. However both excursions failed to hold in the longterm due to a number of factors, most regularly <em>real life syndrome</em>. Of course I have not been totally silent in this time, writing for the popular PHP blog <a href="http://techportal.ibuildings.com">TechPortal</a> on the subject of HMVC <a href="http://techportal.ibuildings.com/2010/02/22/scaling-web-applications-with-hmvc/">Scalability</a> and <a href="http://techportal.ibuildings.com/2010/11/16/optimising-hmvc-web-applications-for-performance/">Optimization</a>.</p>
+
+<p><em>So why start writing again now?</em> Well there are a number of reasons, too many to list here in full without leaving you bored. But three are worth mentioning;</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/01/14/hello-2012/">Read article in full &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/01/01/compiling-libzmq-as-a-universal-static-library-for-iOS/">Compiling libzmq as a universal static library for iOS</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/08/windycitygo-mobile-conference-day-1/">WindyCityGo Mobile Conference Day 1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/31/refactored-phonegap-ios-datepicker/">Refactoring the PhoneGap iOS DatePicker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/26/dns-woes/">DNS woes</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/23/using-ocmock-with-xcode4/">Adding OCMock to Xcode 4 projects</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("samsoir", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/samsoir" class="twitter-follow-button" data-show-count="false">Follow @samsoir</a>
+  
+</section>
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/10477997497093166029?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Sam de Freyssinet -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

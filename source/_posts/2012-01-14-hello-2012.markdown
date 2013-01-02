@@ -1,0 +1,21 @@
+---
+layout: post
+title: "Hello 2012"
+date: 2012-01-14 12:31
+comments: false
+categories: [general, blogging]
+---
+
+As is so common at this time of year, I have made a new years resolution to restart blogging. I have attempted to blog in the past, twice in actuality. However both excursions failed to hold in the longterm due to a number of factors, most regularly _real life syndrome_. Of course I have not been totally silent in this time, writing for the popular PHP blog [TechPortal](http://techportal.ibuildings.com) on the subject of HMVC [Scalability](http://techportal.ibuildings.com/2010/02/22/scaling-web-applications-with-hmvc/) and [Optimization](http://techportal.ibuildings.com/2010/11/16/optimising-hmvc-web-applications-for-performance/).
+
+_So why start writing again now?_ Well there are a number of reasons, too many to list here in full without leaving you bored. But three are worth mentioning;
+<!-- More -->
+ 1. For some time I have wanted to create a new blog, but none of the existing popular blogging platforms attracted me. _Wordpress_ is, in this authors opinion, an awfully architected application that has unfortunately become popular the world over. I also considered writing my own system, but given I hardly had time to write article developing my own platform would be too big an ask- I did have a [stab at it](https://github.com/samsoir/def.reyssi.net-legacy) though! I had thoughts on developing a very rudimentary platform that would take my notes in Markdown format and publish them to either my server or another cloud-based server. Then I read a [blog post](http://mattgemmell.com/2011/09/12/blogging-with-octopress/) by Matt Gemmell on [Octopress](http://octopress.org) and realized it had already been done well.
+
+ 2. I have started a new job in Chicago. This in itself is nothing special. However my new role involves using a new programming language in the form of [Ruby](http://ruby-lang.org). For over ten years I have been developing for the web using [PHP](http://php.net) and related tools. So the move from LAMP to Nginx+Unicorn and; PHPUnit+Behat to Rspec+Cucumber will be a great opportunity for me to record my experience changing languages and toolsets. In all honesty I am delighted to be moving away from PHP, but that is a topic I'll be writing about separately. On top of the challenges associated with mastering new language,I have also moved into a strange new country, which presents another aspect of my life to write about. Chronicling the trials and tribulations of moving country for work may be useful to others, if not a reminder to myself that international moving is not for the faint hearted!
+ 
+ 3. Since my previous blogs disappeared, Twitter and Google+ have provided me with some online expression capabilities. But they do not provide me with enough characters to express myself in any kind of meaningful way, especially when writing about complicated subjects such as the OAuth Protocol; Continuous Deployment pipelines; or the Hierarchical Model-View-Controller architectural pattern. I really needed the freedom to construct articles as I have been used to writing for other publishers. Thus, restarting a blog seemed the only appropriate action.
+
+I am turning off any ability to comment from the outset. The reasons for doing so has already been [argued most eloquently](http://mattgemmell.com/2011/11/29/comments-off/) by the aforementioned Matt Gemmell on his blog, so no need repeat that here. Needless to say, feel free to comment on anything I say on your own blog, Twitter, Facebook, Google+, or by email.
+
+Lets see what 2012 has to offer.

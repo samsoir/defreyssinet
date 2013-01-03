@@ -8,7 +8,7 @@ categories: [ios, libzmq, xcode, tutorial]
 
 I am currently playing around with the [ZeroMQ](http://www.zeromq.org) messaging framework and iOS. This article describes the challenges encountered when integrating ZeroMQ with my iOS project and how I mitigated them. This resulted in a tool to automate producing a single libzmq static library for i386, armv7 and armv7s architectures. 
 
-For the uninitiated, ZeroMQ provides a simple way to pass messages between processes, whether they are local or remote. It can use TCP, UDP, inproc, multicast and several protocols as the transport mechanism. In the past I have heard ZeroMQ (or _ØMQ_ from now on) referred to as a "sockets framework". Although this doesn't capture the entirety of what ØMQ is, it does provide a nice metaphor for my particular use case.
+For the uninitiated, ZeroMQ provides a simple way to pass messages between processes, whether they are local or remote. It can use TCP, UDP, inproc, multicast and several other protocols as the transport mechanism. In the past I have heard ZeroMQ (or _ØMQ_ from now on) referred to as a "sockets framework". Although this doesn't capture the entirety of what ØMQ is, it does provide a nice metaphor for my particular use case.
 
 The project that required ØMQ in this instance was a proof of concept for another project I am currently engaged in. The application in question requires two iOS devices to communicate with each other in realtime across a network. ØMQ provides the communication layer, coupled with [Apple's Bonjour](https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/NetServices/Articles/about.html) zero config network discovery protocol. As ØMQ is a C based library, integrating it with an iOS project should require relatively little effort. Obtain the [libzmq source](http://www.zeromq.org/area:download), compile and add to the Xcode project. But as it turned out, producing a static library for iOS development took some additional effort.
 
@@ -142,6 +142,10 @@ Within the main target of your project, filter the _Build Settings_ to only show
 {% img /images/libzmq/header_search_paths.png Header search paths in project settings %}
 
 Xcode 4.5 automatically adds the correct path for libzmq to the _Library Search Paths_ entry. However if this hasn't been added for you, the same entry that was added for _Header Search Paths_ will work here.
+
+Finally ensure you add the standard C++ library to the `Other Linker Flags` section of the _Build Settings_. Add `-lstdc++` to the list if it is not already present.
+
+{% img /images/libzmq/xcode_other_linker.png stdc++ C++ standard library linker flag %}
 
 At this point you are ready to start using libzmq in your code. To use the ØMQ C library within your code, import the `zmq.h` header in any location where you require it. Libzmq will now run  in the simulator or on a device without modification.
 

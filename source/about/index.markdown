@@ -8,11 +8,11 @@ footer: true
 
 {% img /images/sam.png Sam de Freyssinet %}
 
-Hi I am Sam. I am a software developer and architect, mostly working in PHP, Ruby, and Objective-C/Cocoa. Most of my time is spent living and working in Chicago, Illinois. But don't let that fool you! I originate from London, but currently enjoying a stint at being a *legal alien* in America's Mid-West.
+Hi I am Sam. I am a systems architect and software developer, mostly working in Objective-C/Cocoa, C, Ruby and occasionally PHP. Most of my time is spent living and working in Chicago, Illinois. But don't let that fool you! I originate from London, but currently enjoying a stint at being a *legal alien* in America's Mid-West.
 
-I have particular interest in developing system architectures for large scale applications, predominantly on the web. I am also interested in mobile development for iOS (both iPhone and iPad). I spend a lot of time messing around with various personal projects that rarely see the light of day. An advocate of Open Source, I am a core contributor to the [Kohana Framework](http://kohanaframework.org) project.
+My real passion is developing system architectures for large scale applications. I am also very interested in mobile development for iOS (both iPhone and iPad). I spend a lot of time messing around with various personal projects that rarely see the light of day. I am a strong advocate of the Open Source movement and I am a core contributor to the [Kohana Framework](http://kohanaframework.org) project.
 
-You can hire me through Adapter Pattern for your own projects. I have worked with many international clients of all sizes from the [BBC](http://www.bbc.co.uk) to [Sittercity](http://www.sittercity.com), [Comic Relief](http://www.comicrelief.com) to [The Open University](http://www.ou.ac.uk).
+I am currently the Chief Technical Architect for Sitterati, a new product from Sittercity. Previously I have worked with many international clients of all sizes from the [BBC](http://www.bbc.co.uk) to [Comic Relief](http://www.comicrelief.com),  [The Open University](http://www.ou.ac.uk) to the [Joint Information Strategic Committee](http://www.jisc.ac.uk).
 
 On the rare occasions when I am not sitting in front of a computer, I usually occupy my time with making bread, reading, cycling and in the winter months snowboarding.
 

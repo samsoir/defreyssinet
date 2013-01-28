@@ -64,7 +64,7 @@ Although I will only refer to the roles I participated in across these various e
 
 <p>The Potato Council of England were launching a new campaign to promote British potatoes. They decided that rather than commissioning a traditional advertising campaign, they would instead build and distribute and free application. This application would educate the user to the nutritional value of potatoes compared with other foods. When a user discovered a new  nutritional fact about potatoes, they can post it to their Facebook wall.</p>
 
-<p>I was approached to provide an answer to the brief supplied by the Potato Council. I submitted a design proposal for an iPad application based on the initial design ideas produced by the Potato Council. The iOS application was built and delivered in two weeks. I provided all the final user interface design and development services. Finally, I was also responsible for the successful submission of the application to Apple for review.</p>
+<p>I was approached to provide an answer to the brief supplied by the Potato Council. I submitted a design proposal for an iPad application based on the initial design ideas produced by the Potato Council. The iOS application was built and delivered over two weeks. I provided all the final user interface design and development services. Finally, I was also responsible for the successful submission of the application to Apple for review.</p>
 
 <p>{% img /images/Available_on_the_App_Store_Badge_US-UK_135x40.png %}</p>
 </article>

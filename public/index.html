@@ -9,7 +9,7 @@
   <meta name="author" content="Sam de Freyssinet">
 
   
-  <meta name="description" content="I am currently playing around with the ZeroMQ messaging framework and iOS. This article describes the challenges encountered when integrating ZeroMQ &hellip;">
+  <meta name="description" content="OCUnit (also known as SenTest) is the unit testing framework that Apple now bundles with Xcode. It has been a component of their software development &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,47 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/10/running-application-unit-tests-from-the-command-line-in-xcode-4-dot-6/">Running Application Unit Tests From the Command Line in Xcode 4.6</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-10T15:53:00-05:00" pubdate data-updated="true">Mar 10<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em>OCUnit</em> (also known as <em>SenTest</em>) is the unit testing framework that Apple now bundles with Xcode. It has been a component of their software development kit since Xcode was at version 2.1, back in the summer of 2005. One of the nice things about OCUnit was that you could execute the tests in Xcode, or alternatively from the command line. The latter option is essential if you are using the continuous integration environment to build your iOS or Mac application. However when Apple released Xcode 4.5 with iOS SDK 6.0 they subtly changed the way OCUnit works. This prevented the existing command line interface from working. But more infuriating was that the build and test process would still  exit with a zero status. This ensured that Jenkins would report the unit tests had run without issue.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/03/10/running-application-unit-tests-from-the-command-line-in-xcode-4-dot-6/">Read article in full &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -434,6 +475,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/03/10/running-application-unit-tests-from-the-command-line-in-xcode-4-dot-6/">Running application unit tests from the command line in Xcode 4.6</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/01/01/compiling-libzmq-as-a-universal-static-library-for-iOS/">Compiling libzmq as a universal static library for iOS</a>
       </li>
     
@@ -447,10 +492,6 @@
     
       <li class="post">
         <a href="/blog/2012/03/26/dns-woes/">DNS woes</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/03/23/using-ocmock-with-xcode4/">Adding OCMock to Xcode 4 projects</a>
       </li>
     
   </ul>

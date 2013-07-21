@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: ocunit | Sam de Freyssinet]]></title>
+  <link href="http://def.reyssi.net/blog/categories/ocunit/atom.xml" rel="self"/>
+  <link href="http://def.reyssi.net/"/>
+  <updated>2013-03-10T20:09:35-05:00</updated>
+  <id>http://def.reyssi.net/</id>
+  <author>
+    <name><![CDATA[Sam de Freyssinet]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Running application unit tests from the command line in Xcode 4.6]]></title>
+    <link href="http://def.reyssi.net/blog/2013/03/10/running-application-unit-tests-from-the-command-line-in-xcode-4-dot-6/"/>
+    <updated>2013-03-10T15:53:00-05:00</updated>
+    <id>http://def.reyssi.net/blog/2013/03/10/running-application-unit-tests-from-the-command-line-in-xcode-4-dot-6</id>
+    <content type="html"><![CDATA[<p><em>OCUnit</em> (also known as <em>SenTest</em>) is the unit testing framework that Apple now bundles with Xcode. It has been a component of their software development kit since Xcode was at version 2.1, back in the summer of 2005. One of the nice things about OCUnit was that you could execute the tests in Xcode, or alternatively from the command line. The latter option is essential if you are using the continuous integration environment to build your iOS or Mac application. However when Apple released Xcode 4.5 with iOS SDK 6.0 they subtly changed the way OCUnit works. This prevented the existing command line interface from working. But more infuriating was that the build and test process would still  exit with a zero status. This ensured that Jenkins would report the unit tests had run without issue.</p>
+
+<!-- more -->
+
+
+<p>It took me a couple of weeks to notice that our unit tests build job was not actually running the test suite anymore. There were only a couple of clues that something was not right;</p>
+
+<ol>
+<li>The unit test job was running much faster than it used to.</li>
+<li>I had pushed code with an intentional failing test and watched our build server pass it as working.</li>
+</ol>
+
+
+<p>After further inspection of the build jobs logs, I discovered the following ominous statement nestled in the output.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Unknown Device Type. Using UIUserInterfaceIdiomPad based on screen size
+</span><span class='line'>Terminating since there is no workspace.</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>One of the subtle changes Apple made to OCUnit in Xcode 4.5 was to separate their unit tests into two logical domains, <em>logic tests</em> and <em>application tests</em>. To Apple's credit they have <a href="http://developer.apple.com/library/ios/#documentation/DeveloperTools/Conceptual/UnitTesting/01-Unit-Test_Overview/overview.html">documented this change</a> within their developer documentation. But the differences between logic and application tests are not entirely clear within the documentation.</p>
+
+<p>Logic tests are described as more traditional unit tests, give a method some input A and assert that output B is returned. Application tests are described more as integration tests, where a real device is required. This is great from philosophical perspective, but does not explain the technical differences between the two target types. There has been some discussion on StackOverflow about the precise differences between the two testing types. Some people have suggested that logic tests will only include the Foundation framework, whereas application tests will include the full UIKit framework. In reality though this is not the case. The differences between the two are purely on how the tests are linked to the main executable. Logic tests lack the test bundle linking required to run them from outside of Xcode. Application tests include the correct bundle linking.</p>
+
+<p>For the sake of clarity I am going to ignore Apple's philosophical distinction between <em>logic tests</em> (unit tests) and <em>application tests</em> (integration tests) from this point onwards. Instead lets construct this simple assumption; Apple broke the API for testing code from the command line and did not do a very good job of explaining why. With that we can all feel a little better and continue.</p>
+]]></content>
+  </entry>
+  
+</feed>

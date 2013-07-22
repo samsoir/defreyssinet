@@ -275,16 +275,16 @@ We have successfully implemented the Arbiter framework to replace our Notifier a
 
 The example above uses Arbiter to send notifications in-process to observers. However there are times where there are concurrent processes operating with observers interested in a particular topic. 
 
-For example, a main application handles user requests, while a second process is devoted to statistical analysis and a third is devoted to messaging users. The primary process will be publishing notifications and the other two processes want to listen to those notifications. In these cases the Arbiter example shown above will not work as it works in process.
+For example, a main application handles user requests, while a second process is devoted to statistical analysis and a third is devoted to messaging users. The primary process will be publishing notifications and the other two processes want to listen to those notifications. In these cases the Arbiter example shown above will not work.
 
-We have also encountered this problem and have created two additional Arbiter implementations to allow for multithreaded concurrent observations.
+We have also encountered this problem and have created two additional Arbiter implementations to allow for concurrent process observations.
 
 1. `ResqueArbiter` uses the [Resque](http://github.com/resque/resque) framework as the `Eventer.bus`
 2. `ZeromqArbiter` uses the [ZeroMQ](http://www.zeromq.org) (ØMQ) messaging protocol as the `Eventer.bus`. This Arbiter transport provides the most flexibility, but can be the most complex to use.
 
 It is possible to use any transport for notifications, as long as you can provide the Arbiter implementation to handle the registering of observers and delivery of messages. Therefore users who want to use [RabbitMQ](http://www.rabbitmq.com) for example, should have no problem getting Arbiter to work with that messaging system.
 
-However be aware that thread safety and other concurrent programming issues still apply when using Arbiter across processes.
+However be aware that thread safety and other concurrent concerns still apply when using Arbiter across processes.
 
 ## Obtaining and using Arbiter
 

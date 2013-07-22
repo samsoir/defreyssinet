@@ -535,7 +535,7 @@
 
 <p>For example, a main application handles user requests, while a second process is devoted to statistical analysis and a third is devoted to messaging users. The primary process will be publishing notifications and the other two processes want to listen to those notifications. In these cases the Arbiter example shown above will not work.</p>
 
-<p>We have also encountered this problem and have created two additional Arbiter implementations to allow for concurrent process observations.</p>
+<p>Having also encountered this problem, we have created two additional Arbiter implementations to allow for concurrent process observations.</p>
 
 <ol>
 <li><code>ResqueArbiter</code> uses the <a href="http://github.com/resque/resque">Resque</a> framework as the <code>Eventer.bus</code></li>

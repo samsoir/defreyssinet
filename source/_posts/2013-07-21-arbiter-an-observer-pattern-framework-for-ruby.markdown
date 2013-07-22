@@ -277,7 +277,7 @@ The example above uses Arbiter to send notifications in-process to observers. Ho
 
 For example, a main application handles user requests, while a second process is devoted to statistical analysis and a third is devoted to messaging users. The primary process will be publishing notifications and the other two processes want to listen to those notifications. In these cases the Arbiter example shown above will not work.
 
-We have also encountered this problem and have created two additional Arbiter implementations to allow for concurrent process observations.
+Having also encountered this problem, we have created two additional Arbiter implementations to allow for concurrent process observations.
 
 1. `ResqueArbiter` uses the [Resque](http://github.com/resque/resque) framework as the `Eventer.bus`
 2. `ZeromqArbiter` uses the [ZeroMQ](http://www.zeromq.org) (ØMQ) messaging protocol as the `Eventer.bus`. This Arbiter transport provides the most flexibility, but can be the most complex to use.

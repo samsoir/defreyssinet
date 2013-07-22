@@ -282,13 +282,11 @@ Having also encountered this problem, we have created two additional Arbiter imp
 1. `ResqueArbiter` uses the [Resque](http://github.com/resque/resque) framework as the `Eventer.bus`
 2. `ZeromqArbiter` uses the [ZeroMQ](http://www.zeromq.org) (ØMQ) messaging protocol as the `Eventer.bus`. This Arbiter transport provides the most flexibility, but can be the most complex to use.
 
-It is possible to use any transport for notifications, as long as you can provide the Arbiter implementation to handle the registering of observers and delivery of messages. Therefore users who want to use [RabbitMQ](http://www.rabbitmq.com) for example, should have no problem getting Arbiter to work with that messaging system.
-
-However be aware that thread safety and other concurrent concerns still apply when using Arbiter across processes.
+It is possible to use any transport for notifications, as long as you can provide the Arbiter implementation to handle the registering of observers and delivery of messages. However be aware that thread safety and other concurrent concerns still apply when using Arbiter across processes.
 
 ## Obtaining and using Arbiter
 
-We welcome and encourage everyone to use and improve this lightweight notification framework. Please fork and pull to your (our our) delight.
+We welcome and encourage everyone to use and improve this lightweight notification framework. Please fork and pull to your delight.
 
 Arbiter is now released as an open source library available on [GitHub](http://github.com/sittercity/arbiter) and pre-packaged as a Ruby [Gem](https://rubygems.org/gems/arbiter). Arbiter is licensed under the [ISC License](http://opensource.org/licenses/ISC).
 

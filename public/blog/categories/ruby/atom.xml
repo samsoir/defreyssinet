@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ruby | Sam de Freyssinet]]></title>
   <link href="http://def.reyssi.net/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://def.reyssi.net/"/>
-  <updated>2013-07-22T11:52:42-05:00</updated>
+  <updated>2013-07-22T18:26:35-05:00</updated>
   <id>http://def.reyssi.net/</id>
   <author>
     <name><![CDATA[Sam de Freyssinet]]></name>
@@ -315,13 +315,11 @@ require &lsquo;lib/message/authentication/observer&rsquo;</p>
 </ol>
 
 
-<p>It is possible to use any transport for notifications, as long as you can provide the Arbiter implementation to handle the registering of observers and delivery of messages. Therefore users who want to use <a href="http://www.rabbitmq.com">RabbitMQ</a> for example, should have no problem getting Arbiter to work with that messaging system.</p>
-
-<p>However be aware that thread safety and other concurrent concerns still apply when using Arbiter across processes.</p>
+<p>It is possible to use any transport for notifications, as long as you can provide the Arbiter implementation to handle the registering of observers and delivery of messages. However be aware that thread safety and other concurrent concerns still apply when using Arbiter across processes.</p>
 
 <h2>Obtaining and using Arbiter</h2>
 
-<p>We welcome and encourage everyone to use and improve this lightweight notification framework. Please fork and pull to your (our our) delight.</p>
+<p>We welcome and encourage everyone to use and improve this lightweight notification framework. Please fork and pull to your delight.</p>
 
 <p>Arbiter is now released as an open source library available on <a href="http://github.com/sittercity/arbiter">GitHub</a> and pre-packaged as a Ruby <a href="https://rubygems.org/gems/arbiter">Gem</a>. Arbiter is licensed under the <a href="http://opensource.org/licenses/ISC">ISC License</a>.</p>
 

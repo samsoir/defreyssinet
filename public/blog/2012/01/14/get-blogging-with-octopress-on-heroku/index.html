@@ -135,7 +135,7 @@
 </pre></td><td class='code'><pre><code class=''><span class='line'>$ source ~/.bash_profile</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Now you&#8217;re ready to install Ruby 1.9.2.</p>
+<p>Now you&rsquo;re ready to install Ruby 1.9.2.</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>$ rvm install 1.9.2 && rvm use 1.9.2</span></code></pre></td></tr></table></div></figure>
@@ -264,7 +264,7 @@
 </span><span class='line'>http://smooth-beach-2208.heroku.com/ | git@heroku.com:smooth-beach-2208.git</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Well we have an app, but I don&#8217;t like the name. Heroku will generate a random name for applications if no name is supplied. After doing some research, I discovered you can provide a name, thus <code>heroku create defreyssinet</code> would result in an application located at <code>defreyssinet.heroku.com</code>. However it is not a disaster as we can rename any Heroku application after creating it.</p>
+<p>Well we have an app, but I don&rsquo;t like the name. Heroku will generate a random name for applications if no name is supplied. After doing some research, I discovered you can provide a name, thus <code>heroku create defreyssinet</code> would result in an application located at <code>defreyssinet.heroku.com</code>. However it is not a disaster as we can rename any Heroku application after creating it.</p>
 
 <p>To rename our app, within the <code>~/Projects/octopress</code> folder type.</p>
 
@@ -295,11 +295,11 @@
 <p>As I mentioned earlier, Octopress is a static site generator rather than a fully fledged web application like <em>Wordpress</em> or <em>Habari</em>. This implies that there is a specific workflow in relation to publishing using Octopress. The typical publication flow for an article is as follows;</p>
 
 <ol>
-<li>Create an article - <code>rake new_post["title"]</code></li>
+<li>Create an article &ndash; <code>rake new_post["title"]</code></li>
 <li>Write some content</li>
-<li>Review - <code>rake generate</code></li>
+<li>Review &ndash; <code>rake generate</code></li>
 <li><em>If more work required, return to step 2.</em></li>
-<li>Publish - <code>git push heroku &lt;your app&gt;</code></li>
+<li>Publish &ndash; <code>git push heroku &lt;your app&gt;</code></li>
 </ol>
 
 
@@ -309,7 +309,7 @@
 
 <p><strong>Note:</strong> We will only be working in the <code>source/</code> folder and we <em>must</em> not touch the <code>public/</code> folder. The <code>rake generate</code> task compiles the contents of <code>source/</code> and places it into <code>public/</code>.</p>
 
-<p>So lets go ahead and create an article. (<em>I&#8217;m prefixing with <code>bundle exec</code> here to avoid the version complaint seen earlier.</em>)</p>
+<p>So lets go ahead and create an article. (<em>I&rsquo;m prefixing with <code>bundle exec</code> here to avoid the version complaint seen earlier.</em>)</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>bundle exec rake new_post["Get blogging with Octopress on Heroku"]</span></code></pre></td></tr></table></div></figure>
@@ -334,9 +334,9 @@
 </span><span class='line'>---</span></code></pre></td></tr></table></div></figure>
 
 
-<p>The header of this file contains some <a href="https://github.com/mojombo/jekyll/wiki/yaml-front-matter">yaml front matter</a>. There are additional options available to control the publication state and author. <del>Personally I think the time of publication is less important, but this is easily fixed by removing the time index from the <code>date:</code> entry</del> (<strong>Edit:</strong> don&#8217;t do this as it will mess up article ordering!). I have also turned off comments <code>comments: false</code> for this post.</p>
+<p>The header of this file contains some <a href="https://github.com/mojombo/jekyll/wiki/yaml-front-matter">yaml front matter</a>. There are additional options available to control the publication state and author. <del>Personally I think the time of publication is less important, but this is easily fixed by removing the time index from the <code>date:</code> entry</del> (<strong>Edit:</strong> don&rsquo;t do this as it will mess up article ordering!). I have also turned off comments <code>comments: false</code> for this post.</p>
 
-<p>It is now possible to add some content to this page in Markdown format. We don&#8217;t need a title as the filename will become the title, so don&#8217;t start with a <code># my  title</code> block.</p>
+<p>It is now possible to add some content to this page in Markdown format. We don&rsquo;t need a title as the filename will become the title, so don&rsquo;t start with a <code># my  title</code> block.</p>
 
 <figure class='code'><figcaption><span>source/_posts/2012-01-14-get-blogging-with-octopress-on-heroku</span></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -399,7 +399,7 @@
 
 <p><img src="http://f.cl.ly/items/0a392t0q132I340W2s2Z/Image%202012.01.15%2000:43:09.png" title="'Our first post hosted by POW'" ></p>
 
-<p>Looking good. At this point we can carry on editing and reviewing until we&#8217;re happy the post is ready. Remember that each time a change is made, an additional <code>rake generate</code> task needs to be invoked before any changes will be available in the <code>public/</code> folder.</p>
+<p>Looking good. At this point we can carry on editing and reviewing until we&rsquo;re happy the post is ready. Remember that each time a change is made, an additional <code>rake generate</code> task needs to be invoked before any changes will be available in the <code>public/</code> folder.</p>
 
 <h2>Publishing to Heroku</h2>
 
@@ -411,7 +411,7 @@
 </span><span class='line'>$ git commit -am 'Initial commit with our first post, get blogging with octopress on heroku'</span></code></pre></td></tr></table></div></figure>
 
 
-<p>With the local repository up to date, we can push the repository to Heroku. Once the repository is pushed to Heroku it will be available <em>immediately</em>, so be sure you&#8217;re <em>really</em> ready to publish before pushing upstream.</p>
+<p>With the local repository up to date, we can push the repository to Heroku. Once the repository is pushed to Heroku it will be available <em>immediately</em>, so be sure you&rsquo;re <em>really</em> ready to publish before pushing upstream.</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -523,7 +523,7 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/03/10/running-application-unit-tests-from-the-command-line-in-xcode-4-dot-6/">Running application unit tests from the command line in Xcode 4.6</a>
+        <a href="/blog/2013/07/21/arbiter-an-observer-pattern-framework-for-ruby/">Arbiter: A simple notification observer framework for Ruby</a>
       </li>
     
       <li class="post">
@@ -543,23 +543,6 @@
       </li>
     
   </ul>
-</section>
-
-
-<section>
-  <h1>Latest Tweets</h1>
-  <ul id="tweets">
-    <li class="loading">Status updating...</li>
-  </ul>
-  <script type="text/javascript">
-    $.domReady(function(){
-      getTwitterFeed("samsoir", 4, false);
-    });
-  </script>
-  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
-  
-    <a href="http://twitter.com/samsoir" class="twitter-follow-button" data-show-count="false">Follow @samsoir</a>
-  
 </section>
 
 

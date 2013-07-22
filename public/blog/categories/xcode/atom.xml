@@ -4,7 +4,7 @@
   <title><![CDATA[Category: xcode | Sam de Freyssinet]]></title>
   <link href="http://def.reyssi.net/blog/categories/xcode/atom.xml" rel="self"/>
   <link href="http://def.reyssi.net/"/>
-  <updated>2013-03-10T20:09:35-05:00</updated>
+  <updated>2013-07-22T06:49:23-05:00</updated>
   <id>http://def.reyssi.net/</id>
   <author>
     <name><![CDATA[Sam de Freyssinet]]></name>
@@ -14,57 +14,24 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Running application unit tests from the command line in Xcode 4.6]]></title>
-    <link href="http://def.reyssi.net/blog/2013/03/10/running-application-unit-tests-from-the-command-line-in-xcode-4-dot-6/"/>
-    <updated>2013-03-10T15:53:00-05:00</updated>
-    <id>http://def.reyssi.net/blog/2013/03/10/running-application-unit-tests-from-the-command-line-in-xcode-4-dot-6</id>
-    <content type="html"><![CDATA[<p><em>OCUnit</em> (also known as <em>SenTest</em>) is the unit testing framework that Apple now bundles with Xcode. It has been a component of their software development kit since Xcode was at version 2.1, back in the summer of 2005. One of the nice things about OCUnit was that you could execute the tests in Xcode, or alternatively from the command line. The latter option is essential if you are using the continuous integration environment to build your iOS or Mac application. However when Apple released Xcode 4.5 with iOS SDK 6.0 they subtly changed the way OCUnit works. This prevented the existing command line interface from working. But more infuriating was that the build and test process would still  exit with a zero status. This ensured that Jenkins would report the unit tests had run without issue.</p>
-
-<!-- more -->
-
-
-<p>It took me a couple of weeks to notice that our unit tests build job was not actually running the test suite anymore. There were only a couple of clues that something was not right;</p>
-
-<ol>
-<li>The unit test job was running much faster than it used to.</li>
-<li>I had pushed code with an intentional failing test and watched our build server pass it as working.</li>
-</ol>
-
-
-<p>After further inspection of the build jobs logs, I discovered the following ominous statement nestled in the output.</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Unknown Device Type. Using UIUserInterfaceIdiomPad based on screen size
-</span><span class='line'>Terminating since there is no workspace.</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>One of the subtle changes Apple made to OCUnit in Xcode 4.5 was to separate their unit tests into two logical domains, <em>logic tests</em> and <em>application tests</em>. To Apple's credit they have <a href="http://developer.apple.com/library/ios/#documentation/DeveloperTools/Conceptual/UnitTesting/01-Unit-Test_Overview/overview.html">documented this change</a> within their developer documentation. But the differences between logic and application tests are not entirely clear within the documentation.</p>
-
-<p>Logic tests are described as more traditional unit tests, give a method some input A and assert that output B is returned. Application tests are described more as integration tests, where a real device is required. This is great from philosophical perspective, but does not explain the technical differences between the two target types. There has been some discussion on StackOverflow about the precise differences between the two testing types. Some people have suggested that logic tests will only include the Foundation framework, whereas application tests will include the full UIKit framework. In reality though this is not the case. The differences between the two are purely on how the tests are linked to the main executable. Logic tests lack the test bundle linking required to run them from outside of Xcode. Application tests include the correct bundle linking.</p>
-
-<p>For the sake of clarity I am going to ignore Apple's philosophical distinction between <em>logic tests</em> (unit tests) and <em>application tests</em> (integration tests) from this point onwards. Instead lets construct this simple assumption; Apple broke the API for testing code from the command line and did not do a very good job of explaining why. With that we can all feel a little better and continue.</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Compiling libzmq as a universal static library for iOS]]></title>
     <link href="http://def.reyssi.net/blog/2013/01/01/compiling-libzmq-as-a-universal-static-library-for-iOS/"/>
     <updated>2013-01-01T13:53:00-06:00</updated>
     <id>http://def.reyssi.net/blog/2013/01/01/compiling-libzmq-as-a-universal-static-library-for-iOS</id>
     <content type="html"><![CDATA[<p>I am currently playing around with the <a href="http://www.zeromq.org">ZeroMQ</a> messaging framework and iOS. This article describes the challenges encountered when integrating ZeroMQ with my iOS project and how I mitigated them. This resulted in a tool to automate producing a single libzmq static library for i386, armv7 and armv7s architectures.</p>
 
-<p>For the uninitiated, ZeroMQ provides a simple way to pass messages between processes, whether they are local or remote. It can use TCP, UDP, inproc, multicast and several other protocols as the transport mechanism. In the past I have heard ZeroMQ (or <em>ØMQ</em> from now on) referred to as a "sockets framework". Although this doesn't capture the entirety of what ØMQ is, it does provide a nice metaphor for my particular use case.</p>
+<p>For the uninitiated, ZeroMQ provides a simple way to pass messages between processes, whether they are local or remote. It can use TCP, UDP, inproc, multicast and several other protocols as the transport mechanism. In the past I have heard ZeroMQ (or <em>ØMQ</em> from now on) referred to as a &ldquo;sockets framework&rdquo;. Although this doesn&rsquo;t capture the entirety of what ØMQ is, it does provide a nice metaphor for my particular use case.</p>
 
-<p>The project that required ØMQ in this instance was a proof of concept for another project I am currently engaged in. The application in question requires two iOS devices to communicate with each other in realtime across a network. ØMQ provides the communication layer, coupled with <a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/NetServices/Articles/about.html">Apple's Bonjour</a> zero config network discovery protocol. As ØMQ is a C based library, integrating it with an iOS project should require relatively little effort. Obtain the <a href="http://www.zeromq.org/area:download">libzmq source</a>, compile and add to the Xcode project. But as it turned out, producing a static library for iOS development took some additional effort.</p>
+<p>The project that required ØMQ in this instance was a proof of concept for another project I am currently engaged in. The application in question requires two iOS devices to communicate with each other in realtime across a network. ØMQ provides the communication layer, coupled with <a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/NetServices/Articles/about.html">Apple&rsquo;s Bonjour</a> zero config network discovery protocol. As ØMQ is a C based library, integrating it with an iOS project should require relatively little effort. Obtain the <a href="http://www.zeromq.org/area:download">libzmq source</a>, compile and add to the Xcode project. But as it turned out, producing a static library for iOS development took some additional effort.</p>
 
 <!--more-->
 
 
 <p>Because Apple provide an iOS simulator for development rather than a more useful iOS emulator, any static library must be compiled for the simulator and then again for iOS devices. When an iOS application runs in the simulator, it is using the <a href="http://en.wikipedia.org/wiki/X86">x86</a> (or i386) <a href="http://en.wikipedia.org/wiki/Instruction_set">instruction set</a>; iOS applications are not 64-bit, yet. However all iOS devices use an <a href="http://arm.com">ARM</a> based CPU of some description, requiring different instructions from their x86 cousins. Apple currently support two <a href="http://en.wikipedia.org/wiki/ARM_architecture">ARM architectures</a>, named armv7 for iPhone 4/4S plus the iPad 2 and 3. And armv7s for iPhone 5 and the new iPad 4 (retina display)<sup>[<a href="#f1">1</a>] [<a href="#f2">2</a>]</sup>. Due to this, my project requires ØMQ support for the i386, armv7 and armv7s architecture. It is possible to compile the ØMQ static library three times, add them all to the project and only link to the correct version at compile time. But this can be fiddly, especially when dealing with two almost identical architectures such as armv7 and armv7s.</p>
 
-<p>Fortunately Apple have encountered this multiple architecture problem in their recent past, when moving from the PowerPC to the current x86/x86_64 architecture. Apple wanted to ensure the transitional period was as smooth as possible for their users. So they created the concept of the universal binary, which they imaginatively named a "Universal Application". To the end user, they could execute the same application on their existing PowerPC powered iMac G5 or a shiny new Intel powered MacBook Pro without issue. However, this apparently magical execution of the same code on two different CPU architectures was nothing more than a cheap parlour trick. In reality a universal binary is a single resource that encapsulates the compiled code for two or more CPU architectures. Although the PowerPC to Intel transition was completed many years ago, the tools to produce these universal binaries remain. Only today iOS developers are combining x86 with ARM instructions.</p>
+<p>Fortunately Apple have encountered this multiple architecture problem in their recent past, when moving from the PowerPC to the current x86/x86_64 architecture. Apple wanted to ensure the transitional period was as smooth as possible for their users. So they created the concept of the universal binary, which they imaginatively named a &ldquo;Universal Application&rdquo;. To the end user, they could execute the same application on their existing PowerPC powered iMac G5 or a shiny new Intel powered MacBook Pro without issue. However, this apparently magical execution of the same code on two different CPU architectures was nothing more than a cheap parlour trick. In reality a universal binary is a single resource that encapsulates the compiled code for two or more CPU architectures. Although the PowerPC to Intel transition was completed many years ago, the tools to produce these universal binaries remain. Only today iOS developers are combining x86 with ARM instructions.</p>
 
-<p>It is worthwhile to note that universal libraries are also referred to as "fat" libraries, because they are larger than their single architecture counterparts. The overall iOS application size is a factor in how they can be downloaded to the device. Applications weighing in at over 20 megabytes will require a wifi connection to be downloaded, and all applications must be less than two gigabytes. Although the two gigabyte ceiling is unlikely to be a problem due to a fat library, the 20 megabyte limit could cause a concern. If size is a factor for your application then it is probably worthwhile to only include the correct library for the target architecture. I'll touch on this briefly a bit later.</p>
+<p>It is worthwhile to note that universal libraries are also referred to as &ldquo;fat&rdquo; libraries, because they are larger than their single architecture counterparts. The overall iOS application size is a factor in how they can be downloaded to the device. Applications weighing in at over 20 megabytes will require a wifi connection to be downloaded, and all applications must be less than two gigabytes. Although the two gigabyte ceiling is unlikely to be a problem due to a fat library, the 20 megabyte limit could cause a concern. If size is a factor for your application then it is probably worthwhile to only include the correct library for the target architecture. I&rsquo;ll touch on this briefly a bit later.</p>
 
 <p>The ØMQ page describing how to build <a href="http://www.zeromq.org/build:iphone">libzmq for iOS</a> details the <a href="http://en.wikipedia.org/wiki/Cross_compiler">cross-compiling</a> process. This is fine for creating an armv7 static library from an Intel powered Mac. But as discussed earlier, this library would not be usable by the iOS simulator. I require a universal static library for libzmq that can execute on all of the required architectures.</p>
 
@@ -98,7 +65,7 @@
 <p>To verify whether automake is successfully installed;</p>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>automake --version</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</pre></td><td class='code'><pre><code class=''><span class='line'>automake &mdash;version</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>This should produce output similar to what is shown below. If automake is not found try reinstalling.</p>
 
@@ -115,12 +82,12 @@
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>automake (GNU automake) 1.12.3
-</span><span class='line'>Copyright (C) 2012 Free Software Foundation, Inc.
+</span><span class='line'>Copyright &copy; 2012 Free Software Foundation, Inc.
 </span><span class='line'>License GPLv2+: GNU GPL version 2 or later &lt;a href="http://gnu.org/licenses/gpl-2.0.html">http://gnu.org/licenses/gpl-2.0.html&lt;/a>
 </span><span class='line'>This is free software: you are free to change and redistribute it.
 </span><span class='line'>There is NO WARRANTY, to the extent permitted by law.&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p>Written by Tom Tromey &lt;a href="&#109;&#97;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#x74;&#114;&#x6f;&#x6d;&#101;&#x79;&#64;&#x72;&#101;&#x64;&#x68;&#x61;&#x74;&#x2e;&#x63;&#x6f;&#109;">&#x74;&#x72;&#x6f;&#x6d;&#101;&#x79;&#x40;&#114;&#x65;&#x64;&#x68;&#97;&#116;&#46;&#x63;&#111;&#x6d;&lt;/a>&lt;/p>
+</span><span class='line'>&lt;p>Written by Tom Tromey &lt;a href="&#109;&#x61;&#x69;&#108;&#x74;&#x6f;&#x3a;&#x74;&#114;&#x6f;&#x6d;&#x65;&#121;&#x40;&#x72;&#x65;&#x64;&#x68;&#97;&#116;&#46;&#99;&#x6f;&#x6d;">&#116;&#114;&#111;&#x6d;&#x65;&#x79;&#64;&#x72;&#101;&#100;&#x68;&#x61;&#x74;&#46;&#x63;&#x6f;&#109;&lt;/a>&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;pre>&lt;code>   and Alexandre Duret-Lutz &lt;adl@gnu.org&gt;.
 </span><span class='line'>&lt;/code>&lt;/pre>
@@ -130,14 +97,14 @@
 <p>With Automake installed and available, it is time to get the compilation script and the libzmq source code. Start by cloning the libzmq-ios-universal project from Github. Change directory to a suitable location</p>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>clone https://github.com/samsoir/libzmq-ios-universal.git</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</pre></td><td class='code'><pre><code class=''><span class='line'>clone &lt;a href="https://github.com/samsoir/libzmq-ios-universal.git">https://github.com/samsoir/libzmq-ios-universal.git&lt;/a></span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>Once the clone operation is completed, <code>cd libzmq-ios-universal</code> so that the next step downloads into the project folder.</p>
 
 <p>Now download and untar the latest stable build of libzmq from the <a href="http://www.zeromq.org/area:download">ZeroMQ download page</a>. At the time of writing this is version 3.2.2.</p>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>wget http://download.zeromq.org/zeromq-3.2.2.tar.gz &amp;&amp; tar xfz zeromq-3.2.2.tar.gz</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</pre></td><td class='code'><pre><code class=''><span class='line'>wget &lt;a href="http://download.zeromq.org/zeromq-3.2.2.tar.gz">http://download.zeromq.org/zeromq-3.2.2.tar.gz&lt;/a> &amp;&amp; tar xfz zeromq-3.2.2.tar.gz</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>If everything is fine up until now, we are ready to begin compiling libzmq for iOS. To begin the process type;</p>
 
@@ -163,23 +130,23 @@
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Initializing build directory...
-</span><span class='line'>Initializing dependency directory...
-</span><span class='line'>Compiling libzmq for armv7...
-</span><span class='line'>Compiling libzmq for armv7s...
-</span><span class='line'>Compiling libzmq for i386...
+</pre></td><td class='code'><pre><code class=''><span class='line'>Initializing build directory&hellip;
+</span><span class='line'>Initializing dependency directory&hellip;
+</span><span class='line'>Compiling libzmq for armv7&hellip;
+</span><span class='line'>Compiling libzmq for armv7s&hellip;
+</span><span class='line'>Compiling libzmq for i386&hellip;
 </span><span class='line'>Creating universal static library for armv7, armv7s and i386
-</span><span class='line'>Copying libzmq headers into universal library...
-</span><span class='line'>Tidying up...
+</span><span class='line'>Copying libzmq headers into universal library&hellip;
+</span><span class='line'>Tidying up&hellip;
 </span><span class='line'>Finished compiling libzmq as a static library for iOS.&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>Universal library can be found in build/universal;
-</span><span class='line'>  "lib" folder contains "libzmq.a" static library
-</span><span class='line'>  "include" folder contains headers&lt;/p>
+</span><span class='line'>  &ldquo;lib&rdquo; folder contains &ldquo;libzmq.a&rdquo; static library
+</span><span class='line'>  &ldquo;include&rdquo; folder contains headers&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>To use in your project follow linking instructions
 </span><span class='line'>available on the iOS zeromq page
-</span><span class='line'>http://www.zeromq.org/build:iphone</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'>&lt;a href="http://www.zeromq.org/build:iphone">http://www.zeromq.org/build:iphone&lt;/a></span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>Note that in the unfortunate event that something goes wrong during the compilation, the root cause may not be immediately apparent. However the last command executed places all of its output into a file called <code>build/build.log</code> relative to the current path. The cause of the issue should be apparent within that file.</p>
 
@@ -190,7 +157,7 @@
 <p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>cd ~/Projects/&lt;project name></span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<p>I like to keep my external libraries in their own directory. So I create a directory called "lib" within the project to keep them in.</p>
+<p>I like to keep my external libraries in their own directory. So I create a directory called &ldquo;lib&rdquo; within the project to keep them in.</p>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -205,15 +172,15 @@
 
 <p><img src="/images/libzmq/xcode_add_to_project.png" title="Xcode add folder to project" ></p>
 
-<p>Once you select "Finish" the <code>lib</code> folder will be added to your project.</p>
+<p>Once you select &ldquo;Finish&rdquo; the <code>lib</code> folder will be added to your project.</p>
 
 <p>Before you can start using the library you need to update your projects settings to link the library to your project at compile time, and include the headers in the search path.</p>
 
-<p>Within the main target of your project, filter the <em>Build Settings</em> to only show items including "Search Path". Then update <em>Header Search Paths</em> section to include your newly created <code>lib</code> folder. Add <code>${SRCROOT}/&lt;project name&gt;/lib/**</code> to the list and hit return. The double-star means search recursively through sub folders.</p>
+<p>Within the main target of your project, filter the <em>Build Settings</em> to only show items including &ldquo;Search Path&rdquo;. Then update <em>Header Search Paths</em> section to include your newly created <code>lib</code> folder. Add <code>${SRCROOT}/&lt;project name&gt;/lib/**</code> to the list and hit return. The double-star means search recursively through sub folders.</p>
 
 <p><img src="/images/libzmq/header_search_paths.png" title="Header search paths in project settings" ></p>
 
-<p>Xcode 4.5 automatically adds the correct path for libzmq to the <em>Library Search Paths</em> entry. However if this hasn't been added for you, the same entry that was added for <em>Header Search Paths</em> will work here.</p>
+<p>Xcode 4.5 automatically adds the correct path for libzmq to the <em>Library Search Paths</em> entry. However if this hasn&rsquo;t been added for you, the same entry that was added for <em>Header Search Paths</em> will work here.</p>
 
 <p>Finally ensure you add the standard C++ library to the <code>Other Linker Flags</code> section of the <em>Build Settings</em>. Add <code>-lstdc++</code> to the list if it is not already present.</p>
 

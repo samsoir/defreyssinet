@@ -117,7 +117,7 @@
 
 <p>Date input is a potentially complex operation on a mobile device. There are many components to a full date and making the user type it in is hardly the optimum interface. Of course there are many web forms that expect the user to do just that. But in the mobile context, there is a chance the operator will only be using one hand to interact with the device, so making them use a complex input control, such as a keyboard, would instantly have a negative effect on their experience.</p>
 
-<p>Presenting the standard <a href="http://jquerymobile.com/demos/1.0a4.1/experiments/ui-datepicker/">JQuery Mobile Datepicker</a> or similar will equally frustrate the user. The JQuery Mobile Datepicker component is awful, but hardly the most efficient design. Also, PhoneGap gives the user the impression the app they are using is a native app, so they will most likely expect a native control in this situation. We could use an iOS DatePicker implementation in Javascript such as <a href="http://cubiq.org/spinning-wheel-on-webkit-for-iphone-ipod-touch">Cubiq&#8217;s Spinning Wheel Plugin</a> to present a picker in the PhoneGap. But this ensures the picker will use an iOS interface even when used on an Android, Windows Mobile or one of the two remaining Blackberry devices. Another great way to ruin the user experience is to start presenting unfamiliar controls.</p>
+<p>Presenting the standard <a href="http://jquerymobile.com/demos/1.0a4.1/experiments/ui-datepicker/">JQuery Mobile Datepicker</a> or similar will equally frustrate the user. The JQuery Mobile Datepicker component is awful, but hardly the most efficient design. Also, PhoneGap gives the user the impression the app they are using is a native app, so they will most likely expect a native control in this situation. We could use an iOS DatePicker implementation in Javascript such as <a href="http://cubiq.org/spinning-wheel-on-webkit-for-iphone-ipod-touch">Cubiq&rsquo;s Spinning Wheel Plugin</a> to present a picker in the PhoneGap. But this ensures the picker will use an iOS interface even when used on an Android, Windows Mobile or one of the two remaining Blackberry devices. Another great way to ruin the user experience is to start presenting unfamiliar controls.</p>
 
 <p>Luckily modern mobile operating systems have solved this problem by supplying a native Datepicker control. Using the native Datepicker control on each platform requires a native <a href="http://wiki.phonegap.com/w/page/36752779/PhoneGap%20Plugins">PhoneGap extension</a>. Naturally the first thing to do is look for an existing solution to this problem within the PhoneGap ecosystem. A quick search revealed that Datepicker extensions do exist for PhoneGap on <a href="https://github.com/phonegap/phonegap-plugins/tree/master/iPhone/DatePicker">iOS</a> and <a href="https://github.com/phonegap/phonegap-plugins/tree/master/Android/DatePicker">Android</a>. After downloading the extension and plugging it into our PhoneGap application, the extension worked&hellip; but unfortunately it would only work the one time.</p>
 
@@ -134,7 +134,7 @@
 
 <p>The <code>alloc</code> method will allocate memory for the <code>UIDatePicker</code> object and increment the retain count by one. Assigning the resulting object to the <code>datePicker</code> instance variable via the accessor will increment the retain count a second time. Later in the implementation the <code>datePicker</code> property is released, decreasing the retain count. It is now <code>1</code> for those still counting. An object with a retain count greater that zero will be retained by the autorelease pool.</p>
 
-<p>Memory management in Objective C is a vital concept to understand if you are going to write code any code. Even if you intend to use the new <a href="http://clang.llvm.org/docs/AutomaticReferenceCounting.html">Automatic Reference Counting</a> features provided by Clang, I believe it&#8217;s imperative to understand the fundamentals of memory management. I am not using ARC at the moment and do not intend to any time soon, the reasons behind this decision are probably worthy of another blog post at some other time. However there are three simple rules within the Objective C language for managing memory that, when followed, will see you good in the vast majority of situations;</p>
+<p>Memory management in Objective C is a vital concept to understand if you are going to write code any code. Even if you intend to use the new <a href="http://clang.llvm.org/docs/AutomaticReferenceCounting.html">Automatic Reference Counting</a> features provided by Clang, I believe it&rsquo;s imperative to understand the fundamentals of memory management. I am not using ARC at the moment and do not intend to any time soon, the reasons behind this decision are probably worthy of another blog post at some other time. However there are three simple rules within the Objective C language for managing memory that, when followed, will see you good in the vast majority of situations;</p>
 
 <blockquote><p>When creating a new object using either the;</p><p> 1. [alloc]<br/> 2. [new]<br/> 3. [copy] or derivatives, such as [mutableCopy]<br/> <br/>methods, then you are responsible for releasing that object when you are finished with it.</p></blockquote>
 
@@ -198,7 +198,7 @@
 
 <p>The code block above presents an abstract from the <code>DatePicker show:withDict:</code> method. This is the Objective C method the PhoneGap Javascript plugin is bound to. Each time a HTML control is selected that invokes the <code>show:withDict:</code> method, the code above is executed.</p>
 
-<p>To provide some context, PhoneGap plugins in Objective C are lazily instantiated, thus loaded into memory only when they are first called. This is quite a nice feature. However PhoneGap relies on the extension code playing nicely and tiding up after itself when it is finished working, or if the operating system warns of low memory. PhoneGap calls the <code>onMemoryWarning</code> method within the extension if the operating system is running low on memory, allowing the plugin to release objects superfluous to requirements at that moment. No such luck here. It wouldn&#8217;t be so bad if this extension was not leaking memory.</p>
+<p>To provide some context, PhoneGap plugins in Objective C are lazily instantiated, thus loaded into memory only when they are first called. This is quite a nice feature. However PhoneGap relies on the extension code playing nicely and tiding up after itself when it is finished working, or if the operating system warns of low memory. PhoneGap calls the <code>onMemoryWarning</code> method within the extension if the operating system is running low on memory, allowing the plugin to release objects superfluous to requirements at that moment. No such luck here. It wouldn&rsquo;t be so bad if this extension was not leaking memory.</p>
 
 <p>Returning to the code shown above. The <code>DatePicker show:withDict:</code> method is being invoked by PhoneGap when the plugins Javascript counterpart is executed. Each time this method is executed a new <code>UIDatePicker</code> is created and assigned to the plugin and action sheet. Because the previous <code>UIDatePicker</code> is not released and also not removed from the Action Sheet view, the new instance is placed over the existing instance. The new instance <em>should</em> always be placed on top, but who knows what happens when there are several <code>UIDatePicker</code> controls layered up on top of each other. This begins to explain the strange behaviour experienced earlier where repeated use of the <em>DatePicker</em> extension resulted in it not responding or returning the correct date.</p>
 
@@ -230,7 +230,7 @@
 <ol>
 <li>Remove the <code>UIActionSheet</code> from the interface</li>
 <li>Free the <code>UIActionSheet</code> from memory</li>
-<li>Free the <code>UIDatePicker</code> from memory (although we saw earlier this won&#8217;t happen)</li>
+<li>Free the <code>UIDatePicker</code> from memory (although we saw earlier this won&rsquo;t happen)</li>
 <li>Return the date picked to the PhoneGap API</li>
 <li>Update the state of the DatePicker extension</li>
 </ol>
@@ -300,7 +300,7 @@
 
 <h2>Update</h2>
 
-<p>After this was initially posted, people have pointed out that HTML5 does provide a <a href="http://www.w3.org/TR/html5/states-of-the-type-attribute.html#date-and-time-state-type-datetime">datetime input type</a>. This would obviously provide a better way to perform all of the above within the browser context. The support is still rather patchy, so keep an eye on PPK&#8217;s excellent work <a href="http://www.quirksmode.org/html5/inputs_mobile.html">testing HTML5 support</a> across all mobile devices. As with all things in the mobile web, support for <code>&lt;input type="datetime"&gt;&lt;/input&gt;</code> can only improve with time.</p>
+<p>After this was initially posted, people have pointed out that HTML5 does provide a <a href="http://www.w3.org/TR/html5/states-of-the-type-attribute.html#date-and-time-state-type-datetime">datetime input type</a>. This would obviously provide a better way to perform all of the above within the browser context. The support is still rather patchy, so keep an eye on PPK&rsquo;s excellent work <a href="http://www.quirksmode.org/html5/inputs_mobile.html">testing HTML5 support</a> across all mobile devices. As with all things in the mobile web, support for <code>&lt;input type="datetime"&gt;&lt;/input&gt;</code> can only improve with time.</p>
 </div>
 
 
@@ -366,7 +366,7 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/03/10/running-application-unit-tests-from-the-command-line-in-xcode-4-dot-6/">Running application unit tests from the command line in Xcode 4.6</a>
+        <a href="/blog/2013/07/21/arbiter-an-observer-pattern-framework-for-ruby/">Arbiter: A simple notification observer framework for Ruby</a>
       </li>
     
       <li class="post">
@@ -386,23 +386,6 @@
       </li>
     
   </ul>
-</section>
-
-
-<section>
-  <h1>Latest Tweets</h1>
-  <ul id="tweets">
-    <li class="loading">Status updating...</li>
-  </ul>
-  <script type="text/javascript">
-    $.domReady(function(){
-      getTwitterFeed("samsoir", 4, false);
-    });
-  </script>
-  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
-  
-    <a href="http://twitter.com/samsoir" class="twitter-follow-button" data-show-count="false">Follow @samsoir</a>
-  
 </section>
 
 

@@ -1,0 +1,697 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Arbiter: A simple notification observer framework for Ruby - Sam de Freyssinet</title>
+  <meta name="author" content="Sam de Freyssinet">
+
+  
+  <meta name="description" content="The team at Sittercity have been busy building a vast variety of software components for the organisation over the last twelve months. The array of &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://def.reyssi.net/blog/2013/07/21/arbiter-an-observer-pattern-framework-for-ruby/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/defreyssinet" rel="alternate" title="Sam de Freyssinet" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-28327797-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Sam de Freyssinet</a></h1>
+  
+    <h2>An archive of thoughts and discoveries in the world of software development</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/defreyssinet" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:def.reyssi.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/about">About</a></li>
+  <li><a href="/projects">Projects</a></li>
+  <li><a href="/speaking">Speaking</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Arbiter: A Simple Notification Observer Framework for Ruby</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-21T11:59:00-05:00" pubdate data-updated="true">Jul 21<span>st</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>The team at <a href="http://www.sittercity.com">Sittercity</a> have been busy building a vast variety of software components for the organisation over the last twelve months. The array of components crafted range from iOS applications to single sign-on services. One problem that has consistently appeared is how to handle various use cases where multiple parties are interested in the result of a particular routine. Early in the lifecycle of a project these concerns are usually handled directly within the use case itself, and providing there are only one or two operations things are usually happy. But as it turns out, many use cases have a wide range of interested parties. Shovelling each interested parties concerns into the use case does not scale well, whilst simultaneously violating a number of good design practices.</p>
+
+<p>To help explain the problem, consider this simple example.</p>
+
+<!-- more -->
+
+
+
+
+<figure class='code'><figcaption><span>lib/authenticate/context/email.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Authenticate</span>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">Context</span>
+</span><span class='line'>    <span class="k">class</span> <span class="nc">Email</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">user_repository</span><span class="p">,</span> <span class="n">secret_hashing_policy</span><span class="p">)</span>
+</span><span class='line'>        <span class="vi">@user_repository</span> <span class="o">=</span> <span class="n">user_repository</span>
+</span><span class='line'>        <span class="vi">@secret_hashing_policy</span> <span class="o">=</span> <span class="n">secret_hashing_policy</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">secret</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">authentic</span> <span class="o">=</span> <span class="kp">false</span>
+</span><span class='line'>        <span class="n">user</span> <span class="o">=</span> <span class="vi">@user_repository</span><span class="o">.</span><span class="n">find_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="n">user</span>
+</span><span class='line'>          <span class="n">authentic</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">secret</span><span class="o">.</span><span class="n">eql?</span><span class="p">(</span><span class="vi">@secret_hashing_policy</span><span class="o">.</span><span class="n">hash</span><span class="p">(</span><span class="n">secret</span><span class="p">))</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="n">authentic</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here we have a simple context that authenticates credentials based on the supplied email and secret. The context has two dependencies, as shown in Fig.1;</p>
+
+<p><img src="/images/arbiter-dependency-graph-1.png" title="Fig.1 Dependency graph for Authenticate::Context::Email" ></p>
+
+<ol>
+<li>A user repository that provides access user data</li>
+<li>A hashing policy that governs how secrets are hashed before storage</li>
+</ol>
+
+
+<p>Both of these dependencies are passed into the context during construction. The context provides a single <code>execute</code> method that tests the users authenticity based on the user identifier and secret provided.</p>
+
+<p>This use case as it stands is doing its job very well. Additionally it is adhering to the <a href="http://en.wikipedia.org/wiki/Single_responsibility_principle">single responsibility principle</a>, as it only concerns itself with establishing the authenticity of the credentials supplied. It isn&rsquo;t concerned with loading user data or how to correctly hash a secret.</p>
+
+<p>Later on, the business owner walks over and asks to have insight into the number of authentications occurring;</p>
+
+<blockquote><p>When a user authenticates, the business must record the authentication data into our statistics data warehouse. We want to know who was authenticating and the result of their attempt.</p></blockquote>
+
+
+<p>She wants to capture this data in another statistics repository owned by the Data Warehouse team. Given the data our business owner wants is related to authentications, it seems a simple requirement to fulfil.</p>
+
+<figure class='code'><figcaption><span>lib/authenticate/context/email.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Authenticate</span>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">Context</span>
+</span><span class='line'>    <span class="k">class</span> <span class="nc">Email</span>
+</span><span class='line'>  
+</span><span class='line'>      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">user_repository</span><span class="p">,</span> <span class="n">secret_hashing_policy</span><span class="p">,</span> <span class="n">stats_repository</span><span class="p">)</span>
+</span><span class='line'>        <span class="vi">@user_repository</span> <span class="o">=</span> <span class="n">user_repository</span>
+</span><span class='line'>        <span class="vi">@secret_hashing_policy</span> <span class="o">=</span> <span class="n">secret_hashing_policy</span>
+</span><span class='line'>        <span class="vi">@stats_repository</span> <span class="o">=</span> <span class="n">stats_repository</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">secret</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">authentic</span> <span class="o">=</span> <span class="kp">false</span>
+</span><span class='line'>        <span class="n">user</span> <span class="o">=</span> <span class="vi">@user_repository</span><span class="o">.</span><span class="n">find_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="n">user</span>
+</span><span class='line'>          <span class="n">authentic</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">secret</span><span class="o">.</span><span class="n">eql?</span><span class="p">(</span><span class="vi">@secret_hashing_policy</span><span class="o">.</span><span class="n">hash</span><span class="p">(</span><span class="n">secret</span><span class="p">))</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="vi">@stats_repository</span><span class="o">.</span><span class="n">register_entry</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">authentic</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="n">authentic</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Fulfilling the requirement to provide authentication statistics to the business has grown the authentication context slightly. As it now authenticates and updates statistics, you could argue that it has begun to violate the single responsibility principle. I would certainly agree with your argument if you were to make it. But given the scope of this change, most developers could probably live with that slight violation at this point.</p>
+
+<p>A few days later, the business owner returns to ask for another great idea.</p>
+
+<blockquote><p>When a user fails to authenticate, they should receive an email notification instructing them on how to access the service.</p></blockquote>
+
+
+<p>Now we could just go back and modify the use case to include a mailer and the context would grow further. We are definitely going to violate the single responsibility principle now, as we are authenticating credentials and performing other notification tasks. A another approach would be to create an additional use case for authenticating credentials and notifying various parties. This use case would be a composite of the <code>Authenticate::Context::Email</code> context and two others. It would certainly be cleaner than trying to overload the existing use case with all these extra responsibilities. However, either solution starts introducing dependencies that authentication should not have.</p>
+
+<p><img src="/images/arbiter-dependency-graph-2.png" title="Fig.2 Dependency graph for Authenticate::Context::Email demonstrating violation of the single responsibility principle" ></p>
+
+<p>Fig.2 demonstrates that authenticating a set of credentials now requires a lot of knowledge about other unrelated parts of the system. The simple act of authentication has become confused by the other requirements that have been made.</p>
+
+<p>At this point we should pause for a second and consider the problem again. What we really want to do is authenticate some credentials and then tell the system we are done <em>authenticating</em>. The system can then respond to the message from the authenticate context without having to provide knowledge of the intended behaviour.</p>
+
+<p>We would like is the authentication context to execute and return a boolean value as it does now. Additionally, we want it to notify observers that is finished. The context would still require one additional dependency for notifying, but that would be it. The business owner could provide additional requirements in future for what should happen when authentication succeeds or fails, and the existing authentication context would not have to be altered.</p>
+
+<p>Lets go back to our original implementation of <code>Authenticate::Context::Email</code> and add a basic concept of a notifier.</p>
+
+<figure class='code'><figcaption><span>lib/authenticate/context/email.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Authenticate</span>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">Context</span>
+</span><span class='line'>    <span class="k">class</span> <span class="nc">Email</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="no">AUTHENTICATION_NOTIFICATION</span> <span class="o">=</span> <span class="s1">&#39;authenticate::context::email::complete&#39;</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">user_repository</span><span class="p">,</span> <span class="n">secret_hashing_policy</span><span class="p">,</span> <span class="n">notifier</span><span class="p">)</span>
+</span><span class='line'>        <span class="vi">@user_repository</span> <span class="o">=</span> <span class="n">user_repository</span>
+</span><span class='line'>        <span class="vi">@secret_hashing_policy</span> <span class="o">=</span> <span class="n">secret_hashing_policy</span>
+</span><span class='line'>        <span class="vi">@notifier</span> <span class="o">=</span> <span class="n">notifier</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">secret</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">authentic</span> <span class="o">=</span> <span class="kp">false</span>
+</span><span class='line'>        <span class="n">user</span> <span class="o">=</span> <span class="vi">@user_repository</span><span class="o">.</span><span class="n">find_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="n">user</span>
+</span><span class='line'>          <span class="n">authentic</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">secret</span><span class="o">.</span><span class="n">eql?</span><span class="p">(</span><span class="vi">@secret_hashing_policy</span><span class="o">.</span><span class="n">hash</span><span class="p">(</span><span class="n">secret</span><span class="p">))</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="vi">@notifier</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="no">AUTHENTICATION_NOTIFICATION</span><span class="p">,</span> <span class="p">{</span>
+</span><span class='line'>          <span class="s1">&#39;authentic&#39;</span> <span class="o">=&gt;</span> <span class="n">authentic</span><span class="p">,</span>
+</span><span class='line'>          <span class="s1">&#39;email&#39;</span> <span class="o">=&gt;</span> <span class="n">email</span>
+</span><span class='line'>        <span class="p">})</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="n">credentials_are_authentic</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we have introduced one additional dependency to the original two we defined. The notifier must be passed in, along with the user repository and hashing policy. But the notifier is the only additional dependency we will need. Now we can go and change the implementation of our statistics reporter and account access notifier to listen to the <code>authenticate::context::email::complete</code> notification coming from the notifier and perform their actions accordingly.</p>
+
+<p><img src="/images/arbiter-dependency-graph-3.png" title="Fig.3 Dependency graph for Authenticate::Context::Email demonstrating dependency inversion" ></p>
+
+<p>This implementation also does something interesting to the dependencies. Notice that <code>Authenticate::Context::Email</code> depends on the <code>Notifier</code>, but no longer depends on <code>Authenticate::Stats</code> or <code>Message::AccountAccess</code>. Instead, <code>Authenticate::Stats</code> and <code>Message::AccountAccess</code> depend on <code>Notifier</code>. The result is that <code>Authenticate::Context::Email</code> no longer has any knowledge of <code>Authenticate::Stats</code> or <code>Message::AccountAccess</code> and vice versa. We have inverted the dependencies and introduced a solid boundary between our authentication use case and other parties that need to know about authentication notifications but are not part of that domain.</p>
+
+<p>The <code>Notifier</code> part of this implementation is currently an abstract concept. After looking around the Ruby world for an existing solution, we ended up devising and building a new observer pattern framework called <a href="http://github.com/sittercity/arbiter/">Arbiter</a>.</p>
+
+<h2>Introducing Arbiter</h2>
+
+<p>Arbiter is a simple notification framework. It provides a lightweight notification protocol that can be used across any Ruby application. Simply put, Arbiter is our solution to the <code>Notifier</code> class in the earlier example. There are only two component parts to Arbiter, the Arbiter and the Eventer. The Arbiter observes notifications and executes business logic associated with those notices.</p>
+
+<p>The Eventer is the interface to post notices for observation. The Eventer consists of a transport (<code>Eventer.bus</code>) provided by the Arbiter and the <code>Eventer.post()</code> class method.</p>
+
+<p>The Arbiter provides the transport for notifications posted by the Eventer. The Arbiter intercepts notifications on the transport and passes them to observers that register to a particular event. Registration of observers is done using the <code>Arbiter.add_listener()</code> class method.</p>
+
+<p>Any class can observe notifications from Arbiter, provided it conforms to the Arbiter protocol by implementing the following methods;</p>
+
+<ul>
+<li><code>notify(message_name, args)</code>, called by Arbiter whenever it receives a notification that the observer is interested in.</li>
+<li><code>subscribe_to()</code>,  used by Arbiter to establish the notifications that want to be observed. This method should return an array of notification names.</li>
+</ul>
+
+
+<p>This is all that is required to begin observing notifications with Arbiter. Did I mention it was simple?</p>
+
+<h2>Example</h2>
+
+<p>Revisiting the earlier example of an authentication context, now we will implement the context and the observers using the Arbiter framework.</p>
+
+<p>First of all we need to decide on a transport for Arbiter to use. Given we want to keep this solution simple for the time being, lets use the standard Arbiter transport which uses an in-process execution model. To configure this, we&rsquo;ll setup the <code>Eventer.bus</code> in a configuration for the application.</p>
+
+<figure class='code'><figcaption><span>/config/eventer.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;eventer&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;arbiter&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Eventer</span><span class="o">.</span><span class="n">bus</span> <span class="o">=</span> <span class="no">Arbiter</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The configuration file sets up Eventer to use the basic Arbiter as the transport, referred to as the <code>bus</code>. With this we can write the observers.</p>
+
+<figure class='code'><figcaption><span>/lib/stats/observer.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;stats/repository&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">module</span> <span class="nn">Stats</span>
+</span><span class='line'>  <span class="k">class</span> <span class="nc">Observer</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">stats_repository</span><span class="p">)</span>
+</span><span class='line'>      <span class="vi">@stats_repository</span> <span class="o">=</span> <span class="n">stats_repository</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">subscribe_to</span><span class="p">()</span>
+</span><span class='line'>      <span class="k">return</span> <span class="o">[</span><span class="ss">:authenticate</span><span class="o">]</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">def</span> <span class="nf">notify</span><span class="p">(</span><span class="n">message_name</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+</span><span class='line'>      <span class="vi">@stats_repository</span><span class="o">.</span><span class="n">register_entry</span><span class="p">(</span><span class="n">args</span><span class="o">[</span><span class="s1">&#39;email&#39;</span><span class="o">]</span><span class="p">,</span> <span class="n">args</span><span class="o">[</span><span class="s1">&#39;authentic&#39;</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This observer provides the same functionality for recording authentications as implemented earlier. The actual recording of statistics is now completed within the observers <code>notify()</code> method.</p>
+
+<p>We can use the same pattern for the observer that is responsible for the account access email message when authentication fails.</p>
+
+<figure class='code'><figcaption><span>/lib/message/authentication/observer.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Message</span>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">Authentication</span>
+</span><span class='line'>    <span class="k">class</span> <span class="nc">Observer</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">message_manager</span><span class="p">)</span>
+</span><span class='line'>        <span class="vi">@message_manager</span> <span class="o">=</span> <span class="n">message_manager</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">subscribe_to</span><span class="p">()</span>
+</span><span class='line'>        <span class="k">return</span> <span class="o">[</span><span class="ss">:authenticate</span><span class="o">]</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">notify</span><span class="p">(</span><span class="n">message_name</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+</span><span class='line'>        <span class="vi">@message_manager</span><span class="o">.</span><span class="n">send_reaccess_account</span><span class="p">(</span><span class="n">args</span><span class="o">[</span><span class="s1">&#39;email&#39;</span><span class="o">]</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">args</span><span class="o">[</span><span class="s1">&#39;authentic&#39;</span><span class="o">]</span> <span class="o">==</span> <span class="kp">false</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we have our two observers configured and ready to receive messages, lets update the original <code>Authenticate::Context::Email</code> context to use Arbiter.</p>
+
+<figure class='code'><figcaption><span>lib/authenticate/context/email.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Authenticate</span>
+</span><span class='line'>  <span class="k">module</span> <span class="nn">Context</span>
+</span><span class='line'>    <span class="k">class</span> <span class="nc">Email</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">user_repository</span><span class="p">,</span> <span class="n">secret_hashing_policy</span><span class="p">,</span> <span class="n">eventer</span><span class="p">)</span>
+</span><span class='line'>        <span class="vi">@user_repository</span> <span class="o">=</span> <span class="n">user_repository</span>
+</span><span class='line'>        <span class="vi">@secret_hashing_policy</span> <span class="o">=</span> <span class="n">secret_hashing_policy</span>
+</span><span class='line'>        <span class="vi">@eventer</span> <span class="o">=</span> <span class="n">eventer</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">secret</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">authentic</span> <span class="o">=</span> <span class="kp">false</span>
+</span><span class='line'>        <span class="n">user</span> <span class="o">=</span> <span class="vi">@user_repository</span><span class="o">.</span><span class="n">find_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">if</span> <span class="n">user</span>
+</span><span class='line'>          <span class="n">authentic</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">secret</span><span class="o">.</span><span class="n">eql?</span><span class="p">(</span><span class="vi">@secret_hashing_policy</span><span class="o">.</span><span class="n">hash</span><span class="p">(</span><span class="n">secret</span><span class="p">))</span>
+</span><span class='line'>        <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="vi">@eventer</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="ss">:authenticate</span><span class="p">,</span> <span class="p">{</span>
+</span><span class='line'>          <span class="s1">&#39;authentic&#39;</span> <span class="o">=&gt;</span> <span class="n">authentic</span><span class="p">,</span>
+</span><span class='line'>          <span class="s1">&#39;email&#39;</span> <span class="o">=&gt;</span> <span class="n">email</span>
+</span><span class='line'>        <span class="p">})</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="n">credentials_are_authentic</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Our context is now using the Arbiter <code>Eventer</code> to post the <code>:authenticate</code> notification to the transport. We are almost ready to go, but there is a problem. Right now we are publishing our notifications correctly and have two observers ready to observe. But they are not going to observe anything yet as they have not been registered to the Arbiter. To do this we will need to tell the Arbiter that <code>Stats::Observer</code> and <code>Message::Authentication::Observer</code> want to listen to notifications. Where you do this in your application will depend on its structure. But for the sake of simplicity lets set up these observers in the <code>eventer.rb</code> configuration file we defined earlier.</p>
+
+<figure class='code'><figcaption><span>/config/eventer.rb</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;eventer&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;arbiter&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;lib/stats/observer&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;lib/message/authentication/observer&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Eventer</span><span class="o">.</span><span class="n">bus</span> <span class="o">=</span> <span class="no">Arbiter</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Arbiter</span><span class="o">.</span><span class="n">set_listeners</span><span class="p">(</span><span class="o">[</span><span class="ss">Stats</span><span class="p">:</span><span class="ss">:Observer</span><span class="p">,</span> <span class="ss">Message</span><span class="p">:</span><span class="ss">:Authentication</span><span class="o">::</span><span class="no">Observer</span><span class="o">]</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We have successfully implemented the Arbiter framework to replace our Notifier abstraction used earlier. As a result the authentication use case is now maintaining its single responsibility of authenticating credentials and the two observers we wrote handle the recording of statistics and any other messages as a result of the authentication process.</p>
+
+<h2>Notifications beyond the process boundary</h2>
+
+<p>The example above uses Arbiter to send notifications in-process to observers. However there are times where there are concurrent processes operating with observers interested in a particular topic.</p>
+
+<p>For example, a main application handles user requests, while a second process is devoted to statistical analysis and a third is devoted to messaging users. The primary process will be publishing notifications and the other two processes want to listen to those notifications. In these cases the Arbiter example shown above will not work as it works in process.</p>
+
+<p>We have also encountered this problem and have created two additional Arbiter implementations to allow for multithreaded concurrent observations.</p>
+
+<ol>
+<li><code>ResqueArbiter</code> uses the <a href="http://github.com/resque/resque">Resque</a> framework as the <code>Eventer.bus</code></li>
+<li><code>ZeromqArbiter</code> uses the <a href="http://www.zeromq.org">ZeroMQ</a> (ØMQ) messaging protocol as the <code>Eventer.bus</code>. This Arbiter transport provides the most flexibility, but can be the most complex to use.</li>
+</ol>
+
+
+<p>It is possible to use any transport for notifications, as long as you can provide the Arbiter implementation to handle the registering of observers and delivery of messages. Therefore users who want to use <a href="http://www.rabbitmq.com">RabbitMQ</a> for example, should have no problem getting Arbiter to work with that messaging system.</p>
+
+<p>However be aware that thread safety and other concurrent programming issues still apply when using Arbiter across processes.</p>
+
+<h2>Obtaining and using Arbiter</h2>
+
+<p>We welcome and encourage everyone to use and improve this lightweight notification framework. Please fork and pull to your (our our) delight.</p>
+
+<p>Arbiter is now released as an open source library available on <a href="http://github.com/sittercity/arbiter">GitHub</a> and pre-packaged as a Ruby <a href="https://rubygems.org/gems/arbiter">Gem</a>. Arbiter is licensed under the <a href="http://opensource.org/licenses/ISC">ISC License</a>.</p>
+
+<p>Arbiter is maintained by the awesome Sittercity development team and was written by Robert Grider (<a href="http://twitter.com/mrerrormessage">@mrerrormessage</a>) and Jeremy Bush (<a href="http://twitter.com/jeremybush">@zombor</a>), based on a concept by Robert Grider and myself.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Sam de Freyssinet</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-21T11:59:00-05:00" pubdate data-updated="true">Jul 21<span>st</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/arbiter/'>arbiter</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://def.reyssi.net/blog/2013/07/21/arbiter-an-observer-pattern-framework-for-ruby/" data-via="samsoir" data-counturl="http://def.reyssi.net/blog/2013/07/21/arbiter-an-observer-pattern-framework-for-ruby/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/01/01/compiling-libzmq-as-a-universal-static-library-for-iOS/" title="Previous Post: Compiling libzmq as a universal static library for iOS">&laquo; Compiling libzmq as a universal static library for iOS</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/21/arbiter-an-observer-pattern-framework-for-ruby/">Arbiter: A simple notification observer framework for Ruby</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/01/compiling-libzmq-as-a-universal-static-library-for-iOS/">Compiling libzmq as a universal static library for iOS</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/08/windycitygo-mobile-conference-day-1/">WindyCityGo Mobile Conference Day 1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/31/refactored-phonegap-ios-datepicker/">Refactoring the PhoneGap iOS DatePicker</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/26/dns-woes/">DNS woes</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/10477997497093166029?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Sam de Freyssinet -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

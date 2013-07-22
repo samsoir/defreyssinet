@@ -106,18 +106,18 @@
 
 <div class="entry-content"><p>I am currently playing around with the <a href="http://www.zeromq.org">ZeroMQ</a> messaging framework and iOS. This article describes the challenges encountered when integrating ZeroMQ with my iOS project and how I mitigated them. This resulted in a tool to automate producing a single libzmq static library for i386, armv7 and armv7s architectures.</p>
 
-<p>For the uninitiated, ZeroMQ provides a simple way to pass messages between processes, whether they are local or remote. It can use TCP, UDP, inproc, multicast and several other protocols as the transport mechanism. In the past I have heard ZeroMQ (or <em>ØMQ</em> from now on) referred to as a &#8220;sockets framework&#8221;. Although this doesn&#8217;t capture the entirety of what ØMQ is, it does provide a nice metaphor for my particular use case.</p>
+<p>For the uninitiated, ZeroMQ provides a simple way to pass messages between processes, whether they are local or remote. It can use TCP, UDP, inproc, multicast and several other protocols as the transport mechanism. In the past I have heard ZeroMQ (or <em>ØMQ</em> from now on) referred to as a &ldquo;sockets framework&rdquo;. Although this doesn&rsquo;t capture the entirety of what ØMQ is, it does provide a nice metaphor for my particular use case.</p>
 
-<p>The project that required ØMQ in this instance was a proof of concept for another project I am currently engaged in. The application in question requires two iOS devices to communicate with each other in realtime across a network. ØMQ provides the communication layer, coupled with <a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/NetServices/Articles/about.html">Apple&#8217;s Bonjour</a> zero config network discovery protocol. As ØMQ is a C based library, integrating it with an iOS project should require relatively little effort. Obtain the <a href="http://www.zeromq.org/area:download">libzmq source</a>, compile and add to the Xcode project. But as it turned out, producing a static library for iOS development took some additional effort.</p>
+<p>The project that required ØMQ in this instance was a proof of concept for another project I am currently engaged in. The application in question requires two iOS devices to communicate with each other in realtime across a network. ØMQ provides the communication layer, coupled with <a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/NetServices/Articles/about.html">Apple&rsquo;s Bonjour</a> zero config network discovery protocol. As ØMQ is a C based library, integrating it with an iOS project should require relatively little effort. Obtain the <a href="http://www.zeromq.org/area:download">libzmq source</a>, compile and add to the Xcode project. But as it turned out, producing a static library for iOS development took some additional effort.</p>
 
 <!--more-->
 
 
 <p>Because Apple provide an iOS simulator for development rather than a more useful iOS emulator, any static library must be compiled for the simulator and then again for iOS devices. When an iOS application runs in the simulator, it is using the <a href="http://en.wikipedia.org/wiki/X86">x86</a> (or i386) <a href="http://en.wikipedia.org/wiki/Instruction_set">instruction set</a>; iOS applications are not 64-bit, yet. However all iOS devices use an <a href="http://arm.com">ARM</a> based CPU of some description, requiring different instructions from their x86 cousins. Apple currently support two <a href="http://en.wikipedia.org/wiki/ARM_architecture">ARM architectures</a>, named armv7 for iPhone 4/4S plus the iPad 2 and 3. And armv7s for iPhone 5 and the new iPad 4 (retina display)<sup>[<a href="#f1">1</a>] [<a href="#f2">2</a>]</sup>. Due to this, my project requires ØMQ support for the i386, armv7 and armv7s architecture. It is possible to compile the ØMQ static library three times, add them all to the project and only link to the correct version at compile time. But this can be fiddly, especially when dealing with two almost identical architectures such as armv7 and armv7s.</p>
 
-<p>Fortunately Apple have encountered this multiple architecture problem in their recent past, when moving from the PowerPC to the current x86/x86_64 architecture. Apple wanted to ensure the transitional period was as smooth as possible for their users. So they created the concept of the universal binary, which they imaginatively named a &#8220;Universal Application&#8221;. To the end user, they could execute the same application on their existing PowerPC powered iMac G5 or a shiny new Intel powered MacBook Pro without issue. However, this apparently magical execution of the same code on two different CPU architectures was nothing more than a cheap parlour trick. In reality a universal binary is a single resource that encapsulates the compiled code for two or more CPU architectures. Although the PowerPC to Intel transition was completed many years ago, the tools to produce these universal binaries remain. Only today iOS developers are combining x86 with ARM instructions.</p>
+<p>Fortunately Apple have encountered this multiple architecture problem in their recent past, when moving from the PowerPC to the current x86/x86_64 architecture. Apple wanted to ensure the transitional period was as smooth as possible for their users. So they created the concept of the universal binary, which they imaginatively named a &ldquo;Universal Application&rdquo;. To the end user, they could execute the same application on their existing PowerPC powered iMac G5 or a shiny new Intel powered MacBook Pro without issue. However, this apparently magical execution of the same code on two different CPU architectures was nothing more than a cheap parlour trick. In reality a universal binary is a single resource that encapsulates the compiled code for two or more CPU architectures. Although the PowerPC to Intel transition was completed many years ago, the tools to produce these universal binaries remain. Only today iOS developers are combining x86 with ARM instructions.</p>
 
-<p>It is worthwhile to note that universal libraries are also referred to as &#8220;fat&#8221; libraries, because they are larger than their single architecture counterparts. The overall iOS application size is a factor in how they can be downloaded to the device. Applications weighing in at over 20 megabytes will require a wifi connection to be downloaded, and all applications must be less than two gigabytes. Although the two gigabyte ceiling is unlikely to be a problem due to a fat library, the 20 megabyte limit could cause a concern. If size is a factor for your application then it is probably worthwhile to only include the correct library for the target architecture. I&#8217;ll touch on this briefly a bit later.</p>
+<p>It is worthwhile to note that universal libraries are also referred to as &ldquo;fat&rdquo; libraries, because they are larger than their single architecture counterparts. The overall iOS application size is a factor in how they can be downloaded to the device. Applications weighing in at over 20 megabytes will require a wifi connection to be downloaded, and all applications must be less than two gigabytes. Although the two gigabyte ceiling is unlikely to be a problem due to a fat library, the 20 megabyte limit could cause a concern. If size is a factor for your application then it is probably worthwhile to only include the correct library for the target architecture. I&rsquo;ll touch on this briefly a bit later.</p>
 
 <p>The ØMQ page describing how to build <a href="http://www.zeromq.org/build:iphone">libzmq for iOS</a> details the <a href="http://en.wikipedia.org/wiki/Cross_compiler">cross-compiling</a> process. This is fine for creating an armv7 static library from an Intel powered Mac. But as discussed earlier, this library would not be usable by the iOS simulator. I require a universal static library for libzmq that can execute on all of the required architectures.</p>
 
@@ -243,7 +243,7 @@
 </pre></td><td class='code'><pre><code class=''><span class='line'>cd ~/Projects/&lt;project name></span></code></pre></td></tr></table></div></figure>
 
 
-<p>I like to keep my external libraries in their own directory. So I create a directory called &#8220;lib&#8221; within the project to keep them in.</p>
+<p>I like to keep my external libraries in their own directory. So I create a directory called &ldquo;lib&rdquo; within the project to keep them in.</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -259,15 +259,15 @@
 
 <p><img src="/images/libzmq/xcode_add_to_project.png" title="Xcode add folder to project" ></p>
 
-<p>Once you select &#8220;Finish&#8221; the <code>lib</code> folder will be added to your project.</p>
+<p>Once you select &ldquo;Finish&rdquo; the <code>lib</code> folder will be added to your project.</p>
 
 <p>Before you can start using the library you need to update your projects settings to link the library to your project at compile time, and include the headers in the search path.</p>
 
-<p>Within the main target of your project, filter the <em>Build Settings</em> to only show items including &#8220;Search Path&#8221;. Then update <em>Header Search Paths</em> section to include your newly created <code>lib</code> folder. Add <code>${SRCROOT}/&lt;project name&gt;/lib/**</code> to the list and hit return. The double-star means search recursively through sub folders.</p>
+<p>Within the main target of your project, filter the <em>Build Settings</em> to only show items including &ldquo;Search Path&rdquo;. Then update <em>Header Search Paths</em> section to include your newly created <code>lib</code> folder. Add <code>${SRCROOT}/&lt;project name&gt;/lib/**</code> to the list and hit return. The double-star means search recursively through sub folders.</p>
 
 <p><img src="/images/libzmq/header_search_paths.png" title="Header search paths in project settings" ></p>
 
-<p>Xcode 4.5 automatically adds the correct path for libzmq to the <em>Library Search Paths</em> entry. However if this hasn&#8217;t been added for you, the same entry that was added for <em>Header Search Paths</em> will work here.</p>
+<p>Xcode 4.5 automatically adds the correct path for libzmq to the <em>Library Search Paths</em> entry. However if this hasn&rsquo;t been added for you, the same entry that was added for <em>Header Search Paths</em> will work here.</p>
 
 <p>Finally ensure you add the standard C++ library to the <code>Other Linker Flags</code> section of the <em>Build Settings</em>. Add <code>-lstdc++</code> to the list if it is not already present.</p>
 
@@ -332,7 +332,7 @@
         <a class="basic-alignment left" href="/blog/2012/04/08/windycitygo-mobile-conference-day-1/" title="Previous Post: WindyCityGo Mobile Conference Day 1">&laquo; WindyCityGo Mobile Conference Day 1</a>
       
       
-        <a class="basic-alignment right" href="/blog/2013/03/10/running-application-unit-tests-from-the-command-line-in-xcode-4-dot-6/" title="Next Post: Running application unit tests from the command line in Xcode 4.6">Running application unit tests from the command line in Xcode 4.6 &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2013/07/21/arbiter-an-observer-pattern-framework-for-ruby/" title="Next Post: Arbiter: A simple notification observer framework for Ruby">Arbiter: A simple notification observer framework for Ruby &raquo;</a>
       
     </p>
   </footer>
@@ -347,7 +347,7 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/03/10/running-application-unit-tests-from-the-command-line-in-xcode-4-dot-6/">Running application unit tests from the command line in Xcode 4.6</a>
+        <a href="/blog/2013/07/21/arbiter-an-observer-pattern-framework-for-ruby/">Arbiter: A simple notification observer framework for Ruby</a>
       </li>
     
       <li class="post">
@@ -367,23 +367,6 @@
       </li>
     
   </ul>
-</section>
-
-
-<section>
-  <h1>Latest Tweets</h1>
-  <ul id="tweets">
-    <li class="loading">Status updating...</li>
-  </ul>
-  <script type="text/javascript">
-    $.domReady(function(){
-      getTwitterFeed("samsoir", 4, false);
-    });
-  </script>
-  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
-  
-    <a href="http://twitter.com/samsoir" class="twitter-follow-button" data-show-count="false">Follow @samsoir</a>
-  
 </section>
 
 

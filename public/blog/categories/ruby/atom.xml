@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: ruby | Sam de Freyssinet]]></title>
+  <link href="http://def.reyssi.net/blog/categories/ruby/atom.xml" rel="self"/>
+  <link href="http://def.reyssi.net/"/>
+  <updated>2013-07-22T06:49:23-05:00</updated>
+  <id>http://def.reyssi.net/</id>
+  <author>
+    <name><![CDATA[Sam de Freyssinet]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Arbiter: A simple notification observer framework for Ruby]]></title>
+    <link href="http://def.reyssi.net/blog/2013/07/21/arbiter-an-observer-pattern-framework-for-ruby/"/>
+    <updated>2013-07-21T11:59:00-05:00</updated>
+    <id>http://def.reyssi.net/blog/2013/07/21/arbiter-an-observer-pattern-framework-for-ruby</id>
+    <content type="html"><![CDATA[<p>The team at <a href="http://www.sittercity.com">Sittercity</a> have been busy building a vast variety of software components for the organisation over the last twelve months. The array of components crafted range from iOS applications to single sign-on services. One problem that has consistently appeared is how to handle various use cases where multiple parties are interested in the result of a particular routine. Early in the lifecycle of a project these concerns are usually handled directly within the use case itself, and providing there are only one or two operations things are usually happy. But as it turns out, many use cases have a wide range of interested parties. Shovelling each interested parties concerns into the use case does not scale well, whilst simultaneously violating a number of good design practices.</p>
+
+<p>To help explain the problem, consider this simple example.</p>
+
+<!-- more -->
+
+
+<p>``` ruby lib/authenticate/context/email.rb
+module Authenticate
+  module Context</p>
+
+<pre><code>class Email
+
+  def initialize(user_repository, secret_hashing_policy)
+    @user_repository = user_repository
+    @secret_hashing_policy = secret_hashing_policy
+  end
+
+  def execute(email, secret)
+    authentic = false
+    user = @user_repository.find_by_email(email)
+
+    if user
+      authentic = user.secret.eql?(@secret_hashing_policy.hash(secret))
+    end
+
+    return authentic
+  end
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>Here we have a simple context that authenticates credentials based on the supplied email and secret. The context has two dependencies, as shown in Fig.1;</p>
+
+<p><img src="/images/arbiter-dependency-graph-1.png" title="Fig.1 Dependency graph for Authenticate::Context::Email" ></p>
+
+<ol>
+<li>A user repository that provides access user data</li>
+<li>A hashing policy that governs how secrets are hashed before storage</li>
+</ol>
+
+
+<p>Both of these dependencies are passed into the context during construction. The context provides a single <code>execute</code> method that tests the users authenticity based on the user identifier and secret provided.</p>
+
+<p>This use case as it stands is doing its job very well. Additionally it is adhering to the <a href="http://en.wikipedia.org/wiki/Single_responsibility_principle">single responsibility principle</a>, as it only concerns itself with establishing the authenticity of the credentials supplied. It isn&rsquo;t concerned with loading user data or how to correctly hash a secret.</p>
+
+<p>Later on, the business owner walks over and asks to have insight into the number of authentications occurring;</p>
+
+<p><blockquote><p>When a user authenticates, the business must record the authentication data into our statistics data warehouse. We want to know who was authenticating and the result of their attempt.</p></blockquote></p>
+
+<p>She wants to capture this data in another statistics repository owned by the Data Warehouse team. Given the data our business owner wants is related to authentications, it seems a simple requirement to fulfil.</p>
+
+<p>``` ruby lib/authenticate/context/email.rb
+module Authenticate
+  module Context</p>
+
+<pre><code>class Email
+
+  def initialize(user_repository, secret_hashing_policy, stats_repository)
+    @user_repository = user_repository
+    @secret_hashing_policy = secret_hashing_policy
+    @stats_repository = stats_repository
+  end
+
+  def execute(email, secret)
+    authentic = false
+    user = @user_repository.find_by_email(email)
+
+    if user
+      authentic = user.secret.eql?(@secret_hashing_policy.hash(secret))
+    end
+
+    @stats_repository.register_entry(email, authentic)
+
+    return authentic
+  end
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>Fulfilling the requirement to provide authentication statistics to the business has grown the authentication context slightly. As it now authenticates and updates statistics, you could argue that it has begun to violate the single responsibility principle. I would certainly agree with your argument if you were to make it. But given the scope of this change, most developers could probably live with that slight violation at this point.</p>
+
+<p>A few days later, the business owner returns to ask for another great idea.</p>
+
+<p><blockquote><p>When a user fails to authenticate, they should receive an email notification instructing them on how to access the service.</p></blockquote></p>
+
+<p>Now we could just go back and modify the use case to include a mailer and the context would grow further. We are definitely going to violate the single responsibility principle now, as we are authenticating credentials and performing other notification tasks. A another approach would be to create an additional use case for authenticating credentials and notifying various parties. This use case would be a composite of the <code>Authenticate::Context::Email</code> context and two others. It would certainly be cleaner than trying to overload the existing use case with all these extra responsibilities. However, either solution starts introducing dependencies that authentication should not have.</p>
+
+<p><img src="/images/arbiter-dependency-graph-2.png" title="Fig.2 Dependency graph for Authenticate::Context::Email demonstrating violation of the single responsibility principle" ></p>
+
+<p>Fig.2 demonstrates that authenticating a set of credentials now requires a lot of knowledge about other unrelated parts of the system. The simple act of authentication has become confused by the other requirements that have been made.</p>
+
+<p>At this point we should pause for a second and consider the problem again. What we really want to do is authenticate some credentials and then tell the system we are done <em>authenticating</em>. The system can then respond to the message from the authenticate context without having to provide knowledge of the intended behaviour.</p>
+
+<p>We would like is the authentication context to execute and return a boolean value as it does now. Additionally, we want it to notify observers that is finished. The context would still require one additional dependency for notifying, but that would be it. The business owner could provide additional requirements in future for what should happen when authentication succeeds or fails, and the existing authentication context would not have to be altered.</p>
+
+<p>Lets go back to our original implementation of <code>Authenticate::Context::Email</code> and add a basic concept of a notifier.</p>
+
+<p>``` ruby lib/authenticate/context/email.rb
+module Authenticate
+  module Context</p>
+
+<pre><code>class Email
+
+  AUTHENTICATION_NOTIFICATION = 'authenticate::context::email::complete'
+
+  def initialize(user_repository, secret_hashing_policy, notifier)
+    @user_repository = user_repository
+    @secret_hashing_policy = secret_hashing_policy
+    @notifier = notifier
+  end
+
+  def execute(email, secret)
+    authentic = false
+    user = @user_repository.find_by_email(email)
+
+    if user
+      authentic = user.secret.eql?(@secret_hashing_policy.hash(secret))
+    end
+
+    @notifier.publish(AUTHENTICATION_NOTIFICATION, {
+      'authentic' =&gt; authentic,
+      'email' =&gt; email
+    })
+
+    return credentials_are_authentic
+  end
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>Now we have introduced one additional dependency to the original two we defined. The notifier must be passed in, along with the user repository and hashing policy. But the notifier is the only additional dependency we will need. Now we can go and change the implementation of our statistics reporter and account access notifier to listen to the <code>authenticate::context::email::complete</code> notification coming from the notifier and perform their actions accordingly.</p>
+
+<p><img src="/images/arbiter-dependency-graph-3.png" title="Fig.3 Dependency graph for Authenticate::Context::Email demonstrating dependency inversion" ></p>
+
+<p>This implementation also does something interesting to the dependencies. Notice that <code>Authenticate::Context::Email</code> depends on the <code>Notifier</code>, but no longer depends on <code>Authenticate::Stats</code> or <code>Message::AccountAccess</code>. Instead, <code>Authenticate::Stats</code> and <code>Message::AccountAccess</code> depend on <code>Notifier</code>. The result is that <code>Authenticate::Context::Email</code> no longer has any knowledge of <code>Authenticate::Stats</code> or <code>Message::AccountAccess</code> and vice versa. We have inverted the dependencies and introduced a solid boundary between our authentication use case and other parties that need to know about authentication notifications but are not part of that domain.</p>
+
+<p>The <code>Notifier</code> part of this implementation is currently an abstract concept. After looking around the Ruby world for an existing solution, we ended up devising and building a new observer pattern framework called <a href="http://github.com/sittercity/arbiter/">Arbiter</a>.</p>
+
+<h2>Introducing Arbiter</h2>
+
+<p>Arbiter is a simple notification framework. It provides a lightweight notification protocol that can be used across any Ruby application. Simply put, Arbiter is our solution to the <code>Notifier</code> class in the earlier example. There are only two component parts to Arbiter, the Arbiter and the Eventer. The Arbiter observes notifications and executes business logic associated with those notices.</p>
+
+<p>The Eventer is the interface to post notices for observation. The Eventer consists of a transport (<code>Eventer.bus</code>) provided by the Arbiter and the <code>Eventer.post()</code> class method.</p>
+
+<p>The Arbiter provides the transport for notifications posted by the Eventer. The Arbiter intercepts notifications on the transport and passes them to observers that register to a particular event. Registration of observers is done using the <code>Arbiter.add_listener()</code> class method.</p>
+
+<p>Any class can observe notifications from Arbiter, provided it conforms to the Arbiter protocol by implementing the following methods;</p>
+
+<ul>
+<li><code>notify(message_name, args)</code>, called by Arbiter whenever it receives a notification that the observer is interested in.</li>
+<li><code>subscribe_to()</code>,  used by Arbiter to establish the notifications that want to be observed. This method should return an array of notification names.</li>
+</ul>
+
+
+<p>This is all that is required to begin observing notifications with Arbiter. Did I mention it was simple?</p>
+
+<h2>Example</h2>
+
+<p>Revisiting the earlier example of an authentication context, now we will implement the context and the observers using the Arbiter framework.</p>
+
+<p>First of all we need to decide on a transport for Arbiter to use. Given we want to keep this solution simple for the time being, lets use the standard Arbiter transport which uses an in-process execution model. To configure this, we&rsquo;ll setup the <code>Eventer.bus</code> in a configuration for the application.</p>
+
+<p>``` ruby /config/eventer.rb
+require &lsquo;eventer&rsquo;
+require &lsquo;arbiter&rsquo;</p>
+
+<p>Eventer.bus = Arbiter
+```</p>
+
+<p>The configuration file sets up Eventer to use the basic Arbiter as the transport, referred to as the <code>bus</code>. With this we can write the observers.</p>
+
+<p>``` ruby /lib/stats/observer.rb
+require &lsquo;stats/repository&rsquo;</p>
+
+<p>module Stats
+  class Observer</p>
+
+<pre><code>def initialize(stats_repository)
+  @stats_repository = stats_repository
+end
+
+def subscribe_to()
+  return [:authenticate]
+end
+
+def notify(message_name, args)
+  @stats_repository.register_entry(args['email'], args['authentic'])
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>This observer provides the same functionality for recording authentications as implemented earlier. The actual recording of statistics is now completed within the observers <code>notify()</code> method.</p>
+
+<p>We can use the same pattern for the observer that is responsible for the account access email message when authentication fails.</p>
+
+<p>``` ruby /lib/message/authentication/observer.rb
+module Message
+  module Authentication</p>
+
+<pre><code>class Observer
+
+  def initialize(message_manager)
+    @message_manager = message_manager
+  end
+
+  def subscribe_to()
+    return [:authenticate]
+  end
+
+  def notify(message_name, args)
+    @message_manager.send_reaccess_account(args['email']) if (args['authentic'] == false)
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>Now we have our two observers configured and ready to receive messages, lets update the original <code>Authenticate::Context::Email</code> context to use Arbiter.</p>
+
+<p>``` ruby lib/authenticate/context/email.rb</p>
+
+<p>module Authenticate
+  module Context</p>
+
+<pre><code>class Email
+
+  def initialize(user_repository, secret_hashing_policy, eventer)
+    @user_repository = user_repository
+    @secret_hashing_policy = secret_hashing_policy
+    @eventer = eventer
+  end
+
+  def execute(email, secret)
+    authentic = false
+    user = @user_repository.find_by_email(email)
+
+    if user
+      authentic = user.secret.eql?(@secret_hashing_policy.hash(secret))
+    end
+
+    @eventer.post(:authenticate, {
+      'authentic' =&gt; authentic,
+      'email' =&gt; email
+    })
+
+    return credentials_are_authentic
+  end
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>Our context is now using the Arbiter <code>Eventer</code> to post the <code>:authenticate</code> notification to the transport. We are almost ready to go, but there is a problem. Right now we are publishing our notifications correctly and have two observers ready to observe. But they are not going to observe anything yet as they have not been registered to the Arbiter. To do this we will need to tell the Arbiter that <code>Stats::Observer</code> and <code>Message::Authentication::Observer</code> want to listen to notifications. Where you do this in your application will depend on its structure. But for the sake of simplicity lets set up these observers in the <code>eventer.rb</code> configuration file we defined earlier.</p>
+
+<p>``` ruby /config/eventer.rb
+require &lsquo;eventer&rsquo;
+require &lsquo;arbiter&rsquo;
+require &lsquo;lib/stats/observer&rsquo;
+require &lsquo;lib/message/authentication/observer&rsquo;</p>
+
+<p>Eventer.bus = Arbiter</p>
+
+<p>Arbiter.set_listeners([Stats::Observer, Message::Authentication::Observer])
+```</p>
+
+<p>We have successfully implemented the Arbiter framework to replace our Notifier abstraction used earlier. As a result the authentication use case is now maintaining its single responsibility of authenticating credentials and the two observers we wrote handle the recording of statistics and any other messages as a result of the authentication process.</p>
+
+<h2>Notifications beyond the process boundary</h2>
+
+<p>The example above uses Arbiter to send notifications in-process to observers. However there are times where there are concurrent processes operating with observers interested in a particular topic.</p>
+
+<p>For example, a main application handles user requests, while a second process is devoted to statistical analysis and a third is devoted to messaging users. The primary process will be publishing notifications and the other two processes want to listen to those notifications. In these cases the Arbiter example shown above will not work as it works in process.</p>
+
+<p>We have also encountered this problem and have created two additional Arbiter implementations to allow for multithreaded concurrent observations.</p>
+
+<ol>
+<li><code>ResqueArbiter</code> uses the <a href="http://github.com/resque/resque">Resque</a> framework as the <code>Eventer.bus</code></li>
+<li><code>ZeromqArbiter</code> uses the <a href="http://www.zeromq.org">ZeroMQ</a> (ØMQ) messaging protocol as the <code>Eventer.bus</code>. This Arbiter transport provides the most flexibility, but can be the most complex to use.</li>
+</ol>
+
+
+<p>It is possible to use any transport for notifications, as long as you can provide the Arbiter implementation to handle the registering of observers and delivery of messages. Therefore users who want to use <a href="http://www.rabbitmq.com">RabbitMQ</a> for example, should have no problem getting Arbiter to work with that messaging system.</p>
+
+<p>However be aware that thread safety and other concurrent programming issues still apply when using Arbiter across processes.</p>
+
+<h2>Obtaining and using Arbiter</h2>
+
+<p>We welcome and encourage everyone to use and improve this lightweight notification framework. Please fork and pull to your (our our) delight.</p>
+
+<p>Arbiter is now released as an open source library available on <a href="http://github.com/sittercity/arbiter">GitHub</a> and pre-packaged as a Ruby <a href="https://rubygems.org/gems/arbiter">Gem</a>. Arbiter is licensed under the <a href="http://opensource.org/licenses/ISC">ISC License</a>.</p>
+
+<p>Arbiter is maintained by the awesome Sittercity development team and was written by Robert Grider (<a href="http://twitter.com/mrerrormessage">@mrerrormessage</a>) and Jeremy Bush (<a href="http://twitter.com/jeremybush">@zombor</a>), based on a concept by Robert Grider and myself.</p>
+]]></content>
+  </entry>
+  
+</feed>

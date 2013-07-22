@@ -4,7 +4,7 @@
   <title><![CDATA[Category: dns | Sam de Freyssinet]]></title>
   <link href="http://def.reyssi.net/blog/categories/dns/atom.xml" rel="self"/>
   <link href="http://def.reyssi.net/"/>
-  <updated>2013-03-10T20:09:35-05:00</updated>
+  <updated>2013-07-22T06:49:23-05:00</updated>
   <id>http://def.reyssi.net/</id>
   <author>
     <name><![CDATA[Sam de Freyssinet]]></name>
@@ -18,7 +18,7 @@
     <link href="http://def.reyssi.net/blog/2012/03/26/dns-woes/"/>
     <updated>2012-03-26T22:11:00-05:00</updated>
     <id>http://def.reyssi.net/blog/2012/03/26/dns-woes</id>
-    <content type="html"><![CDATA[<p><img src="http://assets.diylol.com/hfs/2b6/858/748/resized/x-all-the-things-meme-generator-kill-all-the-servers-1abf33.jpg" title="Kill all the servers" ></p>
+    <content type="html"><![CDATA[<p><img class="<a" src="href="http://assets.diylol.com/hfs/2b6/858/748/resized/x-all-the-things-meme-generator-kill-all-the-servers-1abf33.jpg">http://assets.diylol.com/hfs/2b6/858/748/resized/x-all-the-things-meme-generator-kill-all-the-servers-1abf33.jpg</a>" title="Kill all the servers" ></p>
 
 <p>Just a quick note to say that I have been experiencing some DNS woes with this domain. As a result, many of you have probably been seeing a far from beautiful <code>404 Not Found</code> served by my former hosting company. Initially I thought this was an issue with my <a href="http://heroku.com">Heroku</a> web dynos. However after doing some further DNS analysis and investigation I discovered that I had what can only be described as <em>DNS EpicFAIL</em>!</p>
 
@@ -27,9 +27,9 @@
 
 <p>When this site was on the previous host it was hosting its own DNS server using <a href="http://www.isc.org/software/bind">Bind</a>. Because there was only one piece of bare metal there needed to be a backup DNS server hosted elsewhere. At the time I decided to use a free service offered by a company based out of California. I will not advertise them here, not through lack of service but to ensure their offerring is not abused by the masses. I setup the secondary DNS host to be a slave to the primary Bind DNS server hosted on my bare metal. This all worked beautifully for several years.</p>
 
-<p>Fast forward to 2012 and the <a href="/blog/2012/01/14/hello-2012/">decision is made</a> to move to another host. Heroku is a wonderful service, but they don't do DNS within their core offering. There are <a href="http://addons.heroku.com">addons</a> that can provide DNS services, but I wanted to have more control than those services offered. In the end I opted to move to <a href="http://www.zonomi.com">Zonomi</a> as they offered the service required at a very resonably price.</p>
+<p>Fast forward to 2012 and the <a href="/blog/2012/01/14/hello-2012/">decision is made</a> to move to another host. Heroku is a wonderful service, but they don&rsquo;t do DNS within their core offering. There are <a href="http://addons.heroku.com">addons</a> that can provide DNS services, but I wanted to have more control than those services offered. In the end I opted to move to <a href="http://www.zonomi.com">Zonomi</a> as they offered the service required at a very resonably price.</p>
 
-<p>After exporting the original Bind zone configration and importing it correctly into the new DNS server, I then updated the secondary slave DNS servers to pull from the new primary servers hosted by Zonomi. This is where the trouble started. I did not hang around to check if the secondary DNS host was able to pull the zone information from Zonomi using the <a href="http://en.wikipedia.org/wiki/DNS_zone_transfer">AXFR protocol</a>. As it turns out, Zonomi disallow this presently. I'm not sure why but will certainly investigate. As the new DNS zone information was not updated at my secondary DNS host, the original data remained pointing at my old servers.</p>
+<p>After exporting the original Bind zone configration and importing it correctly into the new DNS server, I then updated the secondary slave DNS servers to pull from the new primary servers hosted by Zonomi. This is where the trouble started. I did not hang around to check if the secondary DNS host was able to pull the zone information from Zonomi using the <a href="http://en.wikipedia.org/wiki/DNS_zone_transfer">AXFR protocol</a>. As it turns out, Zonomi disallow this presently. I&rsquo;m not sure why but will certainly investigate. As the new DNS zone information was not updated at my secondary DNS host, the original data remained pointing at my old servers.</p>
 
 <p>Over the last few months I have noticed that this site has intermittently been unvailable some of the time, all of the time or not at all. Initially I thought this was due to Heroku spinning down the web dynos on the free account I started with. However after spinning up a second dyno and still experiencing the issue, it became obvious the issue lie elsewhere. I noticed that <a href="http://www.pingdom.com">Pingdom</a> would report this site as being down even when I could navigate to it without issue. Currently I do not serve Cache-Control headers (coming soon), so it was not a stale cache persisting in a proxy. It was time to <a href="http://linux.die.net/man/1/dig">dig</a> a little into this issue.</p>
 
@@ -57,7 +57,7 @@
 </span><span class='line'>&lt;p>; &lt;&lt;>> DiG 9.7.3-P3 &lt;&lt;>> def.reyssi.net
 </span><span class='line'>;; global options: +cmd
 </span><span class='line'>;; Got answer:
-</span><span class='line'>;; ->>HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 51223
+</span><span class='line'>;; &ndash;>>HEADER&lt;&lt;&ndash; opcode: QUERY, status: NOERROR, id: 51223
 </span><span class='line'>;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>;; QUESTION SECTION:
@@ -103,7 +103,7 @@
 </span><span class='line'>&lt;p>; &lt;&lt;>> DiG 9.7.3-P3 &lt;&lt;>> def.reyssi.net
 </span><span class='line'>;; global options: +cmd
 </span><span class='line'>;; Got answer:
-</span><span class='line'>;; ->>HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 65009
+</span><span class='line'>;; &ndash;>>HEADER&lt;&lt;&ndash; opcode: QUERY, status: NOERROR, id: 65009
 </span><span class='line'>;; flags: qr rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 4, ADDITIONAL: 0&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>;; QUESTION SECTION:
@@ -129,7 +129,7 @@
 
 <p>Hopefully all these DNS woes will be behind me now. It will take around 72 hours for all the DNS changes to propagate across the network, so stability is a little way off. But hopefully <em>everyone</em> should be able to read this by the weekend.</p>
 
-<p><em>Kill All The Servers image courtesy of <a href="http://diylol.com/meme-generator/all-the-things/memes/kill-all-the-servers">DIY LOL</a> - inspired by <a href="http://phpir.com/">Ian Barber's</a> Skype avatar</em></p>
+<p><em>Kill All The Servers image courtesy of <a href="http://diylol.com/meme-generator/all-the-things/memes/kill-all-the-servers">DIY LOL</a> &ndash; inspired by <a href="http://phpir.com/">Ian Barber&rsquo;s</a> Skype avatar</em></p>
 ]]></content>
   </entry>
   

@@ -2,66 +2,66 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://def.reyssi.net/blog/2012/01/14/hello-2012/</loc>
-        <lastmod>2012-11-17T09:19:07-06:00</lastmod>
+        <lastmod>2013-04-02T21:45:06-05:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/blog/2012/01/14/get-blogging-with-octopress-on-heroku/</loc>
-        <lastmod>2012-11-17T09:19:07-06:00</lastmod>
+        <lastmod>2013-04-02T21:45:06-05:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/blog/2012/02/29/dutch-mobile-conference-2012/</loc>
-        <lastmod>2012-11-17T09:19:07-06:00</lastmod>
+        <lastmod>2013-04-02T21:45:06-05:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/blog/2012/03/23/using-ocmock-with-xcode4/</loc>
-        <lastmod>2012-11-17T09:19:07-06:00</lastmod>
+        <lastmod>2013-04-02T21:45:06-05:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/blog/2012/03/26/dns-woes/</loc>
-        <lastmod>2012-11-17T09:19:07-06:00</lastmod>
+        <lastmod>2013-04-02T21:45:06-05:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/blog/2012/03/31/refactored-phonegap-ios-datepicker/</loc>
-        <lastmod>2012-11-17T09:19:07-06:00</lastmod>
+        <lastmod>2013-04-02T21:45:06-05:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/blog/2012/04/08/windycitygo-mobile-conference-day-1/</loc>
-        <lastmod>2012-11-17T09:19:07-06:00</lastmod>
+        <lastmod>2013-04-02T21:45:06-05:00</lastmod>
     </url>
     <url>
         <loc>
             http://def.reyssi.net/blog/2013/01/01/compiling-libzmq-as-a-universal-static-library-for-iOS/
         </loc>
-        <lastmod>2013-01-02T19:00:32-06:00</lastmod>
+        <lastmod>2013-04-02T21:45:06-05:00</lastmod>
     </url>
     <url>
         <loc>
-            http://def.reyssi.net/blog/2013/03/10/running-application-unit-tests-from-the-command-line-in-xcode-4-dot-6/
+            http://def.reyssi.net/blog/2013/07/21/arbiter-an-observer-pattern-framework-for-ruby/
         </loc>
-        <lastmod>2013-03-10T20:09:31-05:00</lastmod>
+        <lastmod>2013-07-22T06:49:13-05:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/404.html</loc>
-        <lastmod>2012-11-17T09:19:07-06:00</lastmod>
+        <lastmod>2013-04-02T21:45:05-05:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/about/</loc>
-        <lastmod>2013-01-27T15:30:12-06:00</lastmod>
+        <lastmod>2013-04-02T21:45:06-05:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/blog/archives/</loc>
-        <lastmod>2013-03-10T20:09:31-05:00</lastmod>
+        <lastmod>2013-07-22T06:49:13-05:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/</loc>
-        <lastmod>2013-03-10T20:09:31-05:00</lastmod>
+        <lastmod>2013-07-22T06:49:13-05:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/projects/</loc>
-        <lastmod>2013-02-15T13:46:51-06:00</lastmod>
+        <lastmod>2013-04-02T21:45:08-05:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/speaking/</loc>
-        <lastmod>2013-02-15T14:15:03-06:00</lastmod>
+        <lastmod>2013-04-02T21:45:09-05:00</lastmod>
     </url>
 </urlset>

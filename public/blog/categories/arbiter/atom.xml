@@ -4,7 +4,7 @@
   <title><![CDATA[Category: arbiter | Sam de Freyssinet]]></title>
   <link href="http://def.reyssi.net/blog/categories/arbiter/atom.xml" rel="self"/>
   <link href="http://def.reyssi.net/"/>
-  <updated>2013-07-22T18:26:35-05:00</updated>
+  <updated>2013-08-13T20:05:54-05:00</updated>
   <id>http://def.reyssi.net/</id>
   <author>
     <name><![CDATA[Sam de Freyssinet]]></name>
@@ -292,11 +292,12 @@ end
 require &lsquo;eventer&rsquo;
 require &lsquo;arbiter&rsquo;
 require &lsquo;lib/stats/observer&rsquo;
-require &lsquo;lib/message/authentication/observer&rsquo;</p>
+require &lsquo;lib/message/authentication/observer&rsquo;
+require &lsquo;factory&rsquo;</p>
 
 <p>Eventer.bus = Arbiter</p>
 
-<p>Arbiter.set_listeners([Stats::Observer, Message::Authentication::Observer])
+<p>Arbiter.set_listeners([Stats::Observer.new(Factory.stats_repo), Message::Authentication::Observer.new(Factory.message_manager)])
 ```</p>
 
 <p>We have successfully implemented the Arbiter framework to replace our Notifier abstraction used earlier. As a result the authentication use case is now maintaining its single responsibility of authenticating credentials and the two observers we wrote handle the recording of statistics and any other messages as a result of the authentication process.</p>

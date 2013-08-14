@@ -60,7 +60,7 @@ She wants to capture this data in another statistics repository owned by the Dat
 module Authenticate
   module Context
     class Email
-	
+
       def initialize(user_repository, secret_hashing_policy, stats_repository)
         @user_repository = user_repository
         @secret_hashing_policy = secret_hashing_policy
@@ -263,10 +263,11 @@ require 'eventer'
 require 'arbiter'
 require 'lib/stats/observer'
 require 'lib/message/authentication/observer'
+require 'factory'
 
 Eventer.bus = Arbiter
 
-Arbiter.set_listeners([Stats::Observer, Message::Authentication::Observer])
+Arbiter.set_listeners([Stats::Observer.new(Factory.stats_repo), Message::Authentication::Observer.new(Factory.message_manager)])
 ```
 
 We have successfully implemented the Arbiter framework to replace our Notifier abstraction used earlier. As a result the authentication use case is now maintaining its single responsibility of authenticating credentials and the two observers we wrote handle the recording of statistics and any other messages as a result of the authentication process.

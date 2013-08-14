@@ -209,7 +209,7 @@
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Authenticate</span>
 </span><span class='line'>  <span class="k">module</span> <span class="nn">Context</span>
 </span><span class='line'>    <span class="k">class</span> <span class="nc">Email</span>
-</span><span class='line'>  
+</span><span class='line'>
 </span><span class='line'>      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">user_repository</span><span class="p">,</span> <span class="n">secret_hashing_policy</span><span class="p">,</span> <span class="n">stats_repository</span><span class="p">)</span>
 </span><span class='line'>        <span class="vi">@user_repository</span> <span class="o">=</span> <span class="n">user_repository</span>
 </span><span class='line'>        <span class="vi">@secret_hashing_policy</span> <span class="o">=</span> <span class="n">secret_hashing_policy</span>
@@ -516,14 +516,16 @@
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
+<span class='line-number'>9</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;eventer&#39;</span>
 </span><span class='line'><span class="nb">require</span> <span class="s1">&#39;arbiter&#39;</span>
 </span><span class='line'><span class="nb">require</span> <span class="s1">&#39;lib/stats/observer&#39;</span>
 </span><span class='line'><span class="nb">require</span> <span class="s1">&#39;lib/message/authentication/observer&#39;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;factory&#39;</span>
 </span><span class='line'>
 </span><span class='line'><span class="no">Eventer</span><span class="o">.</span><span class="n">bus</span> <span class="o">=</span> <span class="no">Arbiter</span>
 </span><span class='line'>
-</span><span class='line'><span class="no">Arbiter</span><span class="o">.</span><span class="n">set_listeners</span><span class="p">(</span><span class="o">[</span><span class="ss">Stats</span><span class="p">:</span><span class="ss">:Observer</span><span class="p">,</span> <span class="ss">Message</span><span class="p">:</span><span class="ss">:Authentication</span><span class="o">::</span><span class="no">Observer</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'><span class="no">Arbiter</span><span class="o">.</span><span class="n">set_listeners</span><span class="p">(</span><span class="o">[</span><span class="ss">Stats</span><span class="p">:</span><span class="ss">:Observer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Factory</span><span class="o">.</span><span class="n">stats_repo</span><span class="p">),</span> <span class="ss">Message</span><span class="p">:</span><span class="ss">:Authentication</span><span class="o">::</span><span class="no">Observer</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Factory</span><span class="o">.</span><span class="n">message_manager</span><span class="p">)</span><span class="o">]</span><span class="p">)</span>
 </span></code></pre></td></tr></table></div></figure>
 
 

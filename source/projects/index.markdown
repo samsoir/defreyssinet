@@ -13,6 +13,21 @@ Although I will only refer to the roles I participated in across these various e
 <div id="blog-archives">
 <h2>2013</h2>
 <article role="article">
+<h1>Sittercity 2.0</h1>
+<time datetime="2013-11-10T03:00:00-06:00>
+	<span class="month">Nov</span>
+	<span class="day">10</span>
+	<span class="year">2013</span>
+</time>
+{% img /images/sittercity-2.0.png %} 
+
+<p>Sittercity launched a brand new experience at the end of 2013. To support the demanding new direction for the company, a completely redesigned platform was built from the ground up. Introducing new technologies across the entire stack, I was involved in numerous projects that supported the overall delivery of the new platform.</p>
+
+<p>As the Vice President of Technology at Sittercity I am currently overseeing the second phase of development on our new platform. Although almost everything we do is top secret due to a fierce rivalry, I am enjoying every moment of working on this project with an incredibly talented team of engineers. Hopefully I will be able to share some more information about some of the incredible systems we have developed in the future, once we are convinced our competitors photocopiers have stopped running.</p>
+
+</article>
+
+<article role="article">
 <h1>Sitterati</h1>
 <time datetime="2013-01-25T12:00:00-06:00>
 	<span class="month">Jan</span>

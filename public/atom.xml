@@ -4,7 +4,7 @@
   <title><![CDATA[Sam de Freyssinet]]></title>
   <link href="http://def.reyssi.net/atom.xml" rel="self"/>
   <link href="http://def.reyssi.net/"/>
-  <updated>2014-02-10T21:02:26-06:00</updated>
+  <updated>2014-04-05T16:35:48-05:00</updated>
   <id>http://def.reyssi.net/</id>
   <author>
     <name><![CDATA[Sam de Freyssinet]]></name>
@@ -12,6 +12,24 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Dutch Mobile Conference 2014]]></title>
+    <link href="http://def.reyssi.net/blog/2014/04/05/dutch-mobile-conference-2014/"/>
+    <updated>2014-04-05T15:54:35-05:00</updated>
+    <id>http://def.reyssi.net/blog/2014/04/05/dutch-mobile-conference-2014</id>
+    <content type="html"><![CDATA[<p><a href="http://www.mobileconference.nl/">The Dutch Mobile Conference</a> in Amsterdam is once again being held this June. It is the third year this conference has been held in conjunction with its well established and lauded sibling, <a href="http://www.phpconference.nl/">The Dutch PHP Conference</a>. This year the focus of the Dutch Mobile Conference is returning to all things mobile, returning the subject matter to native mobile development as well as mobile web.</p>
+
+<p>I was very fortunate to be able to speak at the inaugural <a href="http://lanyrd.com/2012/dutch-mobile-conference/">Dutch Mobile Conference</a> in 2012, and I am delighted to be asked to return to speak once more. This year I am going to be tackling the subject of Behaviour-Driven Development. BDD has been a subject that has found itself at home at many a PHP and Ruby conference in recent years. However it has been noticeably absent from the mobile gatherings. Very conscious of this, I have decided it is time to bring testing to the forefront of mobile development.</p>
+
+<!-- more -->
+
+
+<p>The talk I intend to deliver (<em>Ed:</em> yes it&rsquo;s still being written) will begin by explaining why BDD is so fundamentally important to software engineers, testers and business owners. This will give me the chance to introduce the uninitiated to the Gherkin domain-specific language for expressing behaviour, usually run by the Cucumber testing running framework. Once everyone is comfortable with Gherkin, I will switch my attention to delivering a mythical iOS application that has been defined in Gherkin. We will watch the tests fail inside of Calabash-Cucumber and then implement the logic to make them pass until finally, we have created a fully functioning awesome iOS application.</p>
+
+<p>The talk is designed to be accessible for people of all levels of knowledge of BDD, Cucumber and Calabash. It is being constructed to be very demonstration driven, with live code and test examples throughout. All code will be available for people to try themselves from Github after the presentation.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Arbiter: A simple notification observer framework for Ruby]]></title>
@@ -743,7 +761,7 @@
 
 <p>First off there are some basic Objective C memory management violations within the DatePicker extension. The <code>DatePicker.h</code> header file defines <code>@property (nonatomic, retain) UIDatePicker *datePicker;</code> accessor method. Using this accessor for assignment will increment the reference count of the <code>UIDatePicker</code> object passed to it by one. If we examine the following code, we can see how the accessor is used within the DatePicker implementation.</p>
 
-<figure class='code'><figcaption><span>DatePicker.m</span><a href='https://github.com/phonegap/phonegap-plugins/blob/59f3cf98c40ade9268c0546b7537ad769a17088e/iPhone/DatePicker/DatePicker.m#L34'>link</a></figcaption> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>DatePicker.m</span><a href='https://github.com/phonegap/phonegap-plugins/blob/59f3cf98c40ade9268c0546b7537ad769a17088e/iPhone/DatePicker/DatePicker.m#L34'>link</a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">self</span><span class="p">.</span><span class="n">datePicker</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIDatePicker</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="n">pickerFrame</span><span class="p">];</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -759,7 +777,7 @@
 
 <h2>Further inspection</h2>
 
-<figure class='code'><figcaption><span>DatePicker.m</span><a href='https://github.com/phonegap/phonegap-plugins/blob/59f3cf98c40ade9268c0546b7537ad769a17088e/iPhone/DatePicker/DatePicker.m#L19-68'>link</a></figcaption> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>DatePicker.m</span><a href='https://github.com/phonegap/phonegap-plugins/blob/59f3cf98c40ade9268c0546b7537ad769a17088e/iPhone/DatePicker/DatePicker.m#L19-68'>link</a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -822,7 +840,7 @@
 
 <p>One other implementation detail was also causing concern. The <code>UIActionSheet</code> class has a <a href="http://developer.apple.com/library/ios/#documentation/uikit/reference/UIModalViewDelegate_Protocol/UIActionSheetDelegate/UIActionSheetDelegate.html">delegate protocol</a>. The Cocoa frameworks use the delegate pattern consistently across many user interface controls. Unfortunately the <em>DatePicker</em> extension does not use the provided delegates.</p>
 
-<figure class='code'><figcaption><span>DatePicker.m</span><a href='https://github.com/phonegap/phonegap-plugins/blob/59f3cf98c40ade9268c0546b7537ad769a17088e/iPhone/DatePicker/DatePicker.m#L70-77'>link</a></figcaption> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span>DatePicker.m</span><a href='https://github.com/phonegap/phonegap-plugins/blob/59f3cf98c40ade9268c0546b7537ad769a17088e/iPhone/DatePicker/DatePicker.m#L70-77'>link</a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -854,7 +872,7 @@
 
 <p>That is a lot of responsibility for a simple UI action. A method named <code>dismissActionSheet:</code> should do just that, dismiss the action sheet. Therefore to maintain the single responsibility principle this method should only perform the action it prescribes.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">dismissActionSheet:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span> <span class="p">{</span>
@@ -876,7 +894,7 @@
 
 <p>The first task is to return the date picked to the PhoneGap API. Because a value is being transmitted from the one platform (Objective C) to another (JS), there is potential for things to go wrong. It is probably best to send the value to the PhoneGap API before removing the <code>UIActionSheet</code>. The <code>UIActionSheetDelegate</code> class provides a method <code>actionSheet:willDismissWithButtonIndex:</code> that is invoked prior to the <code>UIActionSheet</code> being dismissed.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -893,7 +911,7 @@
 
 <p>The final task is to update the state of the extension. As the extension will hang around after the user has dismissed it, the state will be important for managing memory and components so it is worth keeping. Again the <code>UIActionSheetDelegate</code> protocol provides the perfect method for updating the state, <code>actionSheet:didDismissWithButtonIndex:</code>.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>

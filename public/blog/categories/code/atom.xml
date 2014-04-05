@@ -4,7 +4,7 @@
   <title><![CDATA[Category: code | Sam de Freyssinet]]></title>
   <link href="http://def.reyssi.net/blog/categories/code/atom.xml" rel="self"/>
   <link href="http://def.reyssi.net/"/>
-  <updated>2014-02-10T21:02:26-06:00</updated>
+  <updated>2014-04-05T16:35:48-05:00</updated>
   <id>http://def.reyssi.net/</id>
   <author>
     <name><![CDATA[Sam de Freyssinet]]></name>
@@ -42,7 +42,7 @@
 <p>First off there are some basic Objective C memory management violations within the DatePicker extension. The <code>DatePicker.h</code> header file defines <code>@property (nonatomic, retain) UIDatePicker *datePicker;</code> accessor method. Using this accessor for assignment will increment the reference count of the <code>UIDatePicker</code> object passed to it by one. If we examine the following code, we can see how the accessor is used within the DatePicker implementation.</p>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>DatePicker.m <a href="https://github.com/phonegap/phonegap-plugins/blob/59f3cf98c40ade9268c0546b7537ad769a17088e/iPhone/DatePicker/DatePicker.m#L34">https://github.com/phonegap/phonegap-plugins/blob/59f3cf98c40ade9268c0546b7537ad769a17088e/iPhone/DatePicker/DatePicker.m#L34</a> </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">self</span><span class="p">.</span><span class="n">datePicker</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIDatePicker</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="n">pickerFrame</span><span class="p">];</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
@@ -57,7 +57,7 @@
 <h2>Further inspection</h2>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>DatePicker.m <a href="https://github.com/phonegap/phonegap-plugins/blob/59f3cf98c40ade9268c0546b7537ad769a17088e/iPhone/DatePicker/DatePicker.m#L19-68">https://github.com/phonegap/phonegap-plugins/blob/59f3cf98c40ade9268c0546b7537ad769a17088e/iPhone/DatePicker/DatePicker.m#L19-68</a> </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -136,7 +136,7 @@
 <p>One other implementation detail was also causing concern. The <code>UIActionSheet</code> class has a <a href="http://developer.apple.com/library/ios/#documentation/uikit/reference/UIModalViewDelegate_Protocol/UIActionSheetDelegate/UIActionSheetDelegate.html">delegate protocol</a>. The Cocoa frameworks use the delegate pattern consistently across many user interface controls. Unfortunately the <em>DatePicker</em> extension does not use the provided delegates.</p>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>DatePicker.m <a href="https://github.com/phonegap/phonegap-plugins/blob/59f3cf98c40ade9268c0546b7537ad769a17088e/iPhone/DatePicker/DatePicker.m#L70-77">https://github.com/phonegap/phonegap-plugins/blob/59f3cf98c40ade9268c0546b7537ad769a17088e/iPhone/DatePicker/DatePicker.m#L70-77</a> </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -173,7 +173,7 @@
 
 <p>That is a lot of responsibility for a simple UI action. A method named <code>dismissActionSheet:</code> should do just that, dismiss the action sheet. Therefore to maintain the single responsibility principle this method should only perform the action it prescribes.</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -200,7 +200,7 @@
 
 <p>The first task is to return the date picked to the PhoneGap API. Because a value is being transmitted from the one platform (Objective C) to another (JS), there is potential for things to go wrong. It is probably best to send the value to the PhoneGap API before removing the <code>UIActionSheet</code>. The <code>UIActionSheetDelegate</code> class provides a method <code>actionSheet:willDismissWithButtonIndex:</code> that is invoked prior to the <code>UIActionSheet</code> being dismissed.</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -222,7 +222,7 @@
 
 <p>The final task is to update the state of the extension. As the extension will hang around after the user has dismissed it, the state will be important for managing memory and components so it is worth keeping. Again the <code>UIActionSheetDelegate</code> protocol provides the perfect method for updating the state, <code>actionSheet:didDismissWithButtonIndex:</code>.</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>

@@ -11,6 +11,23 @@ I have been working in the computer industry since 2001. In that time I have wor
 Although I will only refer to the roles I participated in across these various endeavours, almost all of the projects listed here were only possible due to a team of highly talented people that I am consistently in awe of.
 
 <div id="blog-archives">
+<h2>2014</h2>
+<article role="article">
+<h1>Rape Victim Advocates, Chicago – One Billion Rising 2014 Video</h1>
+<time datetime="2014-01-02T12:00:00-06:00>
+	<span class="month">Jan</span>
+	<span class="day">1</span>
+	<span class="year">2014</span>
+</time>
+<iframe src="//player.vimeo.com/video/82923739" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> <p><a href="http://vimeo.com/82923739">RVA OBR 2014 Video</a> from <a href="http://vimeo.com/samsoir">Sam de Freyssinet</a> on <a href="https://vimeo.com">Vimeo</a>.</p> 
+
+<p>The Rape Victim Advocates charity in Chicago approached me to to help them produce a video to promote their upcoming involvement in the One Billion Rising campaign. RVA had already filmed their staff talking about empowering victims of sexual abuse to speak up and seek justice. The charity needed all of the interviews to be placed into a narrative and include footage of their previous years One Billion Rising event.</p>
+
+<p>All of the footage seen in this video was filmed on mobile phones. It is amazing that we can now produce promotional material quickly and easily using the devices we carry in our pockets. Over the Christmas holiday period I sat with Siân and we cut the video together in Final Cut Pro X. The narrative was already agreed upon, so the work mainly involved editing, colour correction and trying to clean up the sound which unfortunately did give away the equipment used.</p>
+
+<p>It was a fun project to be involved in and I was glad to help this charity that does incredible work daily to make the lives of victims of sexual abuse better.</p>
+
+</article>
 <h2>2013</h2>
 <article role="article">
 <h1>Sittercity 2.0</h1>

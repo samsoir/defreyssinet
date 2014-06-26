@@ -2,70 +2,70 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://def.reyssi.net/blog/2012/01/14/hello-2012/</loc>
-        <lastmod>2013-04-02T21:45:06-05:00</lastmod>
+        <lastmod>2013-04-03T04:45:06+02:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/blog/2012/01/14/get-blogging-with-octopress-on-heroku/</loc>
-        <lastmod>2013-04-02T21:45:06-05:00</lastmod>
+        <lastmod>2013-04-03T04:45:06+02:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/blog/2012/02/29/dutch-mobile-conference-2012/</loc>
-        <lastmod>2013-04-02T21:45:06-05:00</lastmod>
+        <lastmod>2013-04-03T04:45:06+02:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/blog/2012/03/23/using-ocmock-with-xcode4/</loc>
-        <lastmod>2013-04-02T21:45:06-05:00</lastmod>
+        <lastmod>2013-04-03T04:45:06+02:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/blog/2012/03/26/dns-woes/</loc>
-        <lastmod>2013-04-02T21:45:06-05:00</lastmod>
+        <lastmod>2013-04-03T04:45:06+02:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/blog/2012/03/31/refactored-phonegap-ios-datepicker/</loc>
-        <lastmod>2013-04-02T21:45:06-05:00</lastmod>
+        <lastmod>2013-04-03T04:45:06+02:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/blog/2012/04/08/windycitygo-mobile-conference-day-1/</loc>
-        <lastmod>2013-04-02T21:45:06-05:00</lastmod>
+        <lastmod>2013-04-03T04:45:06+02:00</lastmod>
     </url>
     <url>
         <loc>
             http://def.reyssi.net/blog/2013/01/01/compiling-libzmq-as-a-universal-static-library-for-iOS/
         </loc>
-        <lastmod>2013-04-02T21:45:06-05:00</lastmod>
+        <lastmod>2013-04-03T04:45:06+02:00</lastmod>
     </url>
     <url>
         <loc>
             http://def.reyssi.net/blog/2013/07/21/arbiter-an-observer-pattern-framework-for-ruby/
         </loc>
-        <lastmod>2013-08-13T20:05:50-05:00</lastmod>
+        <lastmod>2013-08-14T03:05:50+02:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/blog/2014/04/05/dutch-mobile-conference-2014/</loc>
-        <lastmod>2014-04-05T16:26:16-05:00</lastmod>
+        <lastmod>2014-04-05T23:26:16+02:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/404.html</loc>
-        <lastmod>2013-04-02T21:45:05-05:00</lastmod>
+        <lastmod>2013-04-03T04:45:05+02:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/about/</loc>
-        <lastmod>2014-02-10T20:46:01-06:00</lastmod>
+        <lastmod>2014-02-11T03:46:01+01:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/blog/archives/</loc>
-        <lastmod>2014-04-05T16:26:16-05:00</lastmod>
+        <lastmod>2014-04-05T23:26:16+02:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/</loc>
-        <lastmod>2014-04-05T16:26:16-05:00</lastmod>
+        <lastmod>2014-04-05T23:26:16+02:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/projects/</loc>
-        <lastmod>2014-04-05T16:35:41-05:00</lastmod>
+        <lastmod>2014-04-05T23:35:41+02:00</lastmod>
     </url>
     <url>
         <loc>http://def.reyssi.net/speaking/</loc>
-        <lastmod>2013-04-02T21:45:09-05:00</lastmod>
+        <lastmod>2014-06-26T12:28:58+02:00</lastmod>
     </url>
 </urlset>

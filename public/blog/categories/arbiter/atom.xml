@@ -4,7 +4,7 @@
   <title><![CDATA[Category: arbiter | Sam de Freyssinet]]></title>
   <link href="http://def.reyssi.net/blog/categories/arbiter/atom.xml" rel="self"/>
   <link href="http://def.reyssi.net/"/>
-  <updated>2014-06-29T11:41:02+02:00</updated>
+  <updated>2014-09-21T22:40:40-05:00</updated>
   <id>http://def.reyssi.net/</id>
   <author>
     <name><![CDATA[Sam de Freyssinet]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Arbiter: A simple notification observer framework for Ruby]]></title>
     <link href="http://def.reyssi.net/blog/2013/07/21/arbiter-an-observer-pattern-framework-for-ruby/"/>
-    <updated>2013-07-21T11:59:00+02:00</updated>
+    <updated>2013-07-21T11:59:00-05:00</updated>
     <id>http://def.reyssi.net/blog/2013/07/21/arbiter-an-observer-pattern-framework-for-ruby</id>
     <content type="html"><![CDATA[<p>The team at <a href="http://www.sittercity.com">Sittercity</a> have been busy building a vast variety of software components for the organisation over the last twelve months. The array of components crafted range from iOS applications to single sign-on services. One problem that has consistently appeared is how to handle various use cases where multiple parties are interested in the result of a particular routine. Early in the lifecycle of a project these concerns are usually handled directly within the use case itself, and providing there are only one or two operations things are usually happy. But as it turns out, many use cases have a wide range of interested parties. Shovelling each interested parties concerns into the use case does not scale well, whilst simultaneously violating a number of good design practices.</p>
 

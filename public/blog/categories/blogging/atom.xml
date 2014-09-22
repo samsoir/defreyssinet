@@ -4,7 +4,7 @@
   <title><![CDATA[Category: blogging | Sam de Freyssinet]]></title>
   <link href="http://def.reyssi.net/blog/categories/blogging/atom.xml" rel="self"/>
   <link href="http://def.reyssi.net/"/>
-  <updated>2014-06-29T11:41:02+02:00</updated>
+  <updated>2014-09-21T22:40:40-05:00</updated>
   <id>http://def.reyssi.net/</id>
   <author>
     <name><![CDATA[Sam de Freyssinet]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Get blogging with Octopress on Heroku]]></title>
     <link href="http://def.reyssi.net/blog/2012/01/14/get-blogging-with-octopress-on-heroku/"/>
-    <updated>2012-01-14T20:01:00+01:00</updated>
+    <updated>2012-01-14T20:01:00-06:00</updated>
     <id>http://def.reyssi.net/blog/2012/01/14/get-blogging-with-octopress-on-heroku</id>
     <content type="html"><![CDATA[<p>Following on from <a href="/blog/2012/01/14/hello-2012/">my opening post</a>, one of the main hurdles preventing me from blogging was the setup of a blogging platform and the management of the hosting. Thankfully, <a href="http://octopress.org">Octopress</a> and <a href="http://heroku.com">Heroku</a> have provided a simple, effective and free way for me to publish my thoughts to the web. In this post I will explain how I got started with Octopress on Heroku.</p>
 
@@ -351,7 +351,7 @@ Total 49 (delta 26), reused 0 (delta 0)</p>
   <entry>
     <title type="html"><![CDATA[Hello 2012]]></title>
     <link href="http://def.reyssi.net/blog/2012/01/14/hello-2012/"/>
-    <updated>2012-01-14T12:31:00+01:00</updated>
+    <updated>2012-01-14T12:31:00-06:00</updated>
     <id>http://def.reyssi.net/blog/2012/01/14/hello-2012</id>
     <content type="html"><![CDATA[<p>As is so common at this time of year, I have made a new years resolution to restart blogging. I have attempted to blog in the past, twice in actuality. However both excursions failed to hold in the longterm due to a number of factors, most regularly <em>real life syndrome</em>. Of course I have not been totally silent in this time, writing for the popular PHP blog <a href="http://techportal.ibuildings.com">TechPortal</a> on the subject of HMVC <a href="http://techportal.ibuildings.com/2010/02/22/scaling-web-applications-with-hmvc/">Scalability</a> and <a href="http://techportal.ibuildings.com/2010/11/16/optimising-hmvc-web-applications-for-performance/">Optimization</a>.</p>
 

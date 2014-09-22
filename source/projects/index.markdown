@@ -37,6 +37,23 @@ Although I will only refer to the roles I participated in across these various e
 </article>
 
 <article role="article">
+<h1>Big Sky MMXIV</h1>
+<time datetime="2014-03-09T12:00:00-06:00>
+	<span class="month">Mar</span>
+	<span class="day">9</span>
+	<span class="year">2014</span>
+</time>
+<iframe src="//player.vimeo.com/video/88720690" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> <p><a href="http://vimeo.com/88720690">Big Sky MMXIV</a> from <a href="http://vimeo.com/samsoir">Sam de Freyssinet</a> on <a href="https://vimeo.com">Vimeo</a>.</p> 
+
+<p>In March of 2014, a group of friends and I headed out to Montana in search of fresh powder on Big Sky. Big Sky Resort is one of the largest ski areas in the USA, only surpassed in scale by Whistler. Additionally, the Lone Peak at Big Sky provides the greatest vertical drop available in the country.</p>
+
+<p>Using a Go Pro Hero 3 Black Edition and an iPhone 5, footage from our escapades on the mountain was shot over six days. The footage was transcoded after each days boarding. Finally after returning to Chicago, this video was cut together in Final Cut Pro X.</p>
+
+<p>This was my first time shooting and editing with the Go Pro 3. The quality of the HD footage is incredible.</p>
+
+</article>
+
+<article role="article">
 <h1>Rape Victim Advocates, Chicago – One Billion Rising 2014 Video</h1>
 <time datetime="2014-01-02T12:00:00-06:00>
 	<span class="month">Jan</span>

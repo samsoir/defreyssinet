@@ -4,7 +4,7 @@
   <title><![CDATA[Category: xcode | Sam de Freyssinet]]></title>
   <link href="http://def.reyssi.net/blog/categories/xcode/atom.xml" rel="self"/>
   <link href="http://def.reyssi.net/"/>
-  <updated>2014-09-21T22:40:40-05:00</updated>
+  <updated>2014-09-21T22:57:53-05:00</updated>
   <id>http://def.reyssi.net/</id>
   <author>
     <name><![CDATA[Sam de Freyssinet]]></name>
@@ -87,7 +87,7 @@
 </span><span class='line'>This is free software: you are free to change and redistribute it.
 </span><span class='line'>There is NO WARRANTY, to the extent permitted by law.&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p>Written by Tom Tromey &lt;a href="&#109;&#x61;&#x69;&#x6c;&#x74;&#x6f;&#58;&#116;&#x72;&#111;&#109;&#101;&#x79;&#x40;&#x72;&#x65;&#x64;&#104;&#x61;&#116;&#x2e;&#99;&#111;&#x6d;">&#116;&#x72;&#x6f;&#109;&#101;&#121;&#64;&#x72;&#x65;&#x64;&#104;&#97;&#116;&#46;&#99;&#x6f;&#109;&lt;/a>&lt;/p>
+</span><span class='line'>&lt;p>Written by Tom Tromey &lt;a href="&#x6d;&#97;&#105;&#108;&#116;&#x6f;&#58;&#116;&#114;&#111;&#x6d;&#101;&#x79;&#64;&#x72;&#101;&#x64;&#x68;&#97;&#116;&#46;&#99;&#x6f;&#109;">&#x74;&#114;&#111;&#109;&#x65;&#121;&#x40;&#114;&#101;&#x64;&#104;&#97;&#116;&#46;&#99;&#111;&#109;&lt;/a>&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;pre>&lt;code>   and Alexandre Duret-Lutz &lt;adl@gnu.org&gt;.
 </span><span class='line'>&lt;/code>&lt;/pre>
